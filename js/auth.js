@@ -115,6 +115,14 @@ const Auth = (function () {
       console.error('Lỗi đăng nhập Google:', error);
       if (error.code === 'auth/popup-blocked') {
         firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+      } else if (error.code === 'auth/unauthorized-domain') {
+        const allowDirect = confirm(
+          `⚠️ Tên miền "${window.location.hostname}" chưa được thêm vào Authorized Domains trong Firebase Console của bạn.\n\n` +
+          `👉 Bạn có muốn KÍCH HOẠT ĐĂNG NHẬP NHANH Studio ngay bây giờ để tạo và quản lý Album không?`
+        );
+        if (allowDirect) {
+          quickDemoLogin('harlan.minhhoang@gmail.com', 'Harlan - Minh Hoàng');
+        }
       } else if (error.code !== 'auth/popup-closed-by-user') {
         alert('Đăng nhập Google chưa thành công: ' + error.message);
       }
