@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Album Pro - Thư Viện Ảnh Google Drive Chuyên Nghiệp</title>
+  <link rel="shortcut icon" type="image/png" href="./assets/default_avatar.png">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <!-- Ambient background glow effect -->
+  <div class="app-bg-glow"></div>
+
+  <div class="app-wrapper">
+    <!-- ====================================================================
+         TOP NAVIGATION BAR
+         ==================================================================== -->
+    <header class="navbar-custom" id="mainNavbar">
+      <div class="nav-container">
+        <a class="brand-logo" href="#dashboard" onclick="App.navigateTo('#dashboard')">
+          <div class="brand-logo-icon">
+            <i class="bi bi-images"></i>
+          </div>
+          <div>
+            <span class="brand-title-gradient">ALBUM DRIVE</span>
+            <span style="font-size:0.75rem;display:block;color:var(--text-muted);font-weight:500;">STUDIO GALLERY PRO</span>
+          </div>
+        </a>
+
+        <!-- Quick Code Search in Navbar -->
+        <div class="nav-code-search-box d-none d-md-flex align-items-center">
+          <i class="bi bi-key-fill nav-code-icon text-warning"></i>
+          <input type="text" class="nav-code-input font-monospace text-uppercase" id="navSearchAlbumCode" placeholder="Nhập mã Album (VD: DD8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
+          <button type="button" class="nav-code-submit-btn" onclick="App.searchAndOpenAlbum(document.getElementById('navSearchAlbumCode').value)" title="Xem album ngay">
+            <i class="bi bi-arrow-right-short fs-5"></i>
+          </button>
+        </div>
+
+        <div class="nav-actions">
+          <div id="navbarAuthContainer" class="d-inline-flex align-items-center"></div>
+          <button class="btn-modern btn-glass" onclick="document.getElementById('guideModal').classList.add('open')" title="Hướng dẫn sử dụng">
+            <i class="bi bi-question-circle"></i> <span class="d-none d-sm-inline">Hướng dẫn</span>
+          </button>
+          <button class="btn-modern btn-primary-glow" onclick="Auth.requireAuth(() => App.openCreateModal())">
+            <i class="bi bi-plus-circle-fill"></i> <span>Tạo Album Mới</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         VIEW 1: DASHBOARD (TỔNG QUAN TÀI KHOẢN & QUẢN LÝ ALBUM)
+         ==================================================================== -->
+    <main id="dashboardView" class="view-container active">
+      <div class="dashboard-wrap">
+        <!-- Studio Hero Profile Banner -->
+        <section class="studio-hero-card">
+          <div class="studio-cover-banner">
+            <div class="studio-cover-pattern"></div>
+          </div>
+          <div class="studio-hero-content">
+            <div class="studio-profile-flex">
+              <div class="studio-avatar-wrap">
+                <img src="./assets/default_avatar.png" alt="Studio Avatar" class="studio-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop';" />
+                <span class="studio-status-badge" title="Đang hoạt động"></span>
+              </div>
+              <div class="studio-meta">
+                <h1>Chào Mừng Quý Khách</h1>
+                <div class="studio-subtitle">
+                  <span><i class="bi bi-camera-fill text-primary"></i> Thư viện ảnh Google Drive chuyên nghiệp</span>
+                  <span>•</span>
+                  <span><i class="bi bi-geo-alt-fill text-danger"></i> Việt Nam</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button class="btn-modern btn-glass" onclick="App.openCreateModal()">
+                <i class="bi bi-folder-plus text-primary"></i> Thêm Album Drive
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Access Code Hero Box (Dành cho Khách Hàng) -->
+        <section class="guest-quick-code-card mb-4">
+          <div class="guest-code-flex">
+            <div class="d-flex align-items-center gap-3">
+              <div class="guest-code-badge-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+              </div>
+              <div>
+                <h3 class="guest-code-title mb-1">Truy Cập Album Bằng Mã</h3>
+                <p class="guest-code-desc text-muted mb-0">Khách hàng nhập mã album do studio gửi để xem và chọn ảnh ngay lập tức (không cần đăng nhập)</p>
+              </div>
+            </div>
+            <div class="guest-code-input-form">
+              <div class="guest-input-wrap">
+                <i class="bi bi-key-fill text-warning"></i>
+                <input type="text" id="inputQuickAlbumCode" class="guest-code-input font-monospace text-uppercase" placeholder="Nhập mã (VD: DD8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
+              </div>
+              <button type="button" class="btn-modern btn-primary-glow guest-code-btn" onclick="App.searchAndOpenAlbum(document.getElementById('inputQuickAlbumCode').value)">
+                <span>Xem Album</span> <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Stats Metric Cards -->
+        <section class="quick-stats-grid">
+          <div class="stat-metric-card">
+            <div class="stat-icon-wrap stat-icon-blue">
+              <i class="bi bi-collection-fill"></i>
+            </div>
+            <div class="stat-metric-info">
+              <div class="stat-num" id="statTotalAlbums">0</div>
+              <div class="stat-label">Tổng số Album</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-wrap stat-icon-purple">
+              <i class="bi bi-image-fill"></i>
+            </div>
+            <div class="stat-metric-info">
+              <div class="stat-num" id="statTotalPhotos">0</div>
+              <div class="stat-label">Tổng số ảnh Drive</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-wrap stat-icon-emerald">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="stat-metric-info">
+              <div class="stat-num" id="statTotalSelected">0</div>
+              <div class="stat-label">Ảnh khách đã chọn</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-wrap stat-icon-rose">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+            <div class="stat-metric-info">
+              <div class="stat-num" id="statTotalFavorites">0</div>
+              <div class="stat-label">Ảnh yêu thích ❤️</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dashboard Toolbar: Filter Tabs & Search -->
+        <div class="dashboard-toolbar">
+          <div class="album-filter-tabs">
+            <button class="filter-tab-btn active" onclick="App.renderAlbumCards('all', document.getElementById('searchAlbumInput').value); this.parentElement.querySelectorAll('.filter-tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+              Tất cả Album
+            </button>
+            <button class="filter-tab-btn" onclick="App.renderAlbumCards('public', document.getElementById('searchAlbumInput').value); this.parentElement.querySelectorAll('.filter-tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+              Công khai
+            </button>
+            <button class="filter-tab-btn" onclick="App.renderAlbumCards('private', document.getElementById('searchAlbumInput').value); this.parentElement.querySelectorAll('.filter-tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+              Riêng tư
+            </button>
+          </div>
+
+          <div class="search-input-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchAlbumInput" placeholder="Tìm kiếm tên album..." oninput="App.renderAlbumCards('all', this.value)" />
+          </div>
+        </div>
+
+        <!-- Album Cards Grid -->
+        <section class="album-card-grid" id="dashboardAlbumGrid">
+          <!-- Album cards rendered via JS -->
+        </section>
+      </div>
+    </main>
+
+    <!-- ====================================================================
+         VIEW 2: ALBUM DETAIL / GALLERY VIEW (XEM ẢNH & CHỌN ẢNH)
+         ==================================================================== -->
+    <main id="albumDetailView" class="view-container">
+      <div class="album-view-section">
+        <!-- Hero Cover Header Fullscreen -->
+        <section class="album-hero-cover" id="albumHeroCover">
+          <div class="album-hero-overlay"></div>
+
+          <!-- Top back button -->
+          <div class="album-hero-top-nav">
+            <a class="back-to-dashboard-btn" href="#dashboard" onclick="App.navigateTo('#dashboard')">
+              <i class="bi bi-arrow-left"></i> <span>Quay lại danh sách Album</span>
+            </a>
+          </div>
+
+          <!-- Bottom Album Info -->
+          <div class="album-hero-bottom-info">
+            <div class="album-hero-title-group">
+              <h1 id="albumHeroTitle">Tên Album</h1>
+              <div class="album-hero-studio-meta">
+                <img src="./assets/default_avatar.png" alt="Avatar" class="album-hero-avatar" />
+                <div>
+                  <div class="album-hero-studio-name" id="albumHeroStudioName">Nguyễn Minh Hoàng</div>
+                  <small style="opacity:0.85;">Photo Gallery Studio</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scroll Down Prompt -->
+            <div class="scroll-down-prompt" onclick="document.getElementById('galleryControlsBar').scrollIntoView({behavior:'smooth'})">
+              <span style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Xem ảnh</span>
+              <div class="scroll-circle">
+                <i class="bi bi-chevron-down"></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sticky Controls Bar (Liquid Glass Toolbar) -->
+        <div class="sticky-controls-bar" id="galleryControlsBar">
+          <div class="liquid-toolbar-container">
+            <div class="liquid-actions-left">
+              <!-- Tải ảnh Dropdown -->
+              <div class="liquid-select-wrap">
+                <select class="liquid-select" id="selectDownloadMode" onchange="if(this.value){ AlbumDownloader.downloadBatch(Gallery.getCurrentAlbum().photos, Gallery.getCurrentAlbum().title, this.value); this.value=''; }">
+                  <option value="" selected disabled>📥 Tải ảnh ZIP</option>
+                  <option value="selected">✅ Tải ảnh đã chọn</option>
+                  <option value="favorite">❤️ Tải ảnh yêu thích</option>
+                  <option value="print">🖨️ Tải ảnh in</option>
+                  <option value="note">📝 Tải ảnh có ghi chú</option>
+                  <option value="all">📁 Tải tất cả ảnh</option>
+                </select>
+                <i class="bi bi-chevron-down liquid-select-arrow"></i>
+              </div>
+
+              <!-- Nút mở Google Drive -->
+              <button class="btn-modern btn-glass" onclick="window.open(Gallery.getCurrentAlbum()?.link_drive || 'https://drive.google.com', '_blank')">
+                <i class="bi bi-google text-primary"></i> <span>Mở Drive</span>
+              </button>
+
+              <!-- Hướng dẫn modal -->
+              <button class="btn-modern btn-glass" onclick="document.getElementById('guideModal').classList.add('open')">
+                <i class="bi bi-info-circle-fill text-warning"></i> <span>Hướng dẫn</span>
+              </button>
+            </div>
+
+            <div class="liquid-actions-right">
+              <!-- Lọc tên ảnh PC / Lightroom Dropdown -->
+              <div class="liquid-select-wrap">
+                <select class="liquid-select" id="selectExportFilename" onchange="if(this.value){ Gallery.exportFilenames(this.value); this.value=''; }">
+                  <option value="" selected disabled>📋 Xuất tên ảnh (Lightroom / PC)</option>
+                  <option value="1">Lọc tên ảnh đã chọn</option>
+                  <option value="3">Lọc tên ảnh yêu thích</option>
+                  <option value="2">Lọc tên ảnh in</option>
+                  <option value="4">Lọc tên ảnh ghi chú</option>
+                  <option value="all">Lọc tất cả tên ảnh</option>
+                </select>
+                <i class="bi bi-chevron-down liquid-select-arrow"></i>
+              </div>
+
+              <!-- Reset Selection Dropdown -->
+              <div class="liquid-select-wrap">
+                <select class="liquid-select" id="selectResetActions" onchange="if(this.value){ Gallery.resetSelections(this.value); this.value=''; }">
+                  <option value="" selected disabled>🔄 Reset lựa chọn</option>
+                  <option value="1">Reset ảnh đã chọn</option>
+                  <option value="3">Reset ảnh yêu thích</option>
+                  <option value="2">Reset ảnh in</option>
+                  <option value="4">Reset ghi chú</option>
+                  <option value="all">Reset tất cả lựa chọn</option>
+                </select>
+                <i class="bi bi-chevron-down liquid-select-arrow"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Filter Chips Bar -->
+          <div class="filter-chips-bar">
+            <div class="filter-chips-container">
+              <button class="chip-filter-btn active" data-filter="all" onclick="Gallery.setFilter('all')">
+                <i class="bi bi-grid-fill text-secondary"></i>
+                <span>Tất cả</span>
+                <span class="chip-badge" id="badgeCountTotal">0</span>
+              </button>
+
+              <button class="chip-filter-btn" data-filter="selected" onclick="Gallery.setFilter('selected')">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>Đã chọn</span>
+                <span class="chip-badge" id="badgeCountSelected">0</span>
+              </button>
+
+              <button class="chip-filter-btn" data-filter="favorite" onclick="Gallery.setFilter('favorite')">
+                <i class="bi bi-heart-fill text-danger"></i>
+                <span>Yêu thích</span>
+                <span class="chip-badge" id="badgeCountFavorite">0</span>
+              </button>
+
+              <button class="chip-filter-btn" data-filter="print" onclick="Gallery.setFilter('print')">
+                <i class="bi bi-printer-fill text-primary"></i>
+                <span>Ảnh in</span>
+                <span class="chip-badge" id="badgeCountPrint">0</span>
+              </button>
+
+              <button class="chip-filter-btn" data-filter="note" onclick="Gallery.setFilter('note')">
+                <i class="bi bi-chat-left-text-fill text-warning"></i>
+                <span>Có ghi chú</span>
+                <span class="chip-badge" id="badgeCountNote">0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Masonry Grid Gallery -->
+        <section class="gallery-container">
+          <div class="masonry-grid-wrap" id="masonryGridWrap">
+            <!-- Photos rendered via Gallery.js -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 1: TẠO & CHỈNH SỬA ALBUM (GLASSMORPHISM)
+       ==================================================================== -->
+  <div class="modal-overlay" id="albumCreateModal">
+    <div class="glass-modal-card">
+      <div class="modal-header-glass">
+        <h2 id="modalFormTitle">Tạo Album Mới</h2>
+        <button type="button" class="modal-close-btn" onclick="App.closeCreateModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form class="modal-body-form" id="albumCreateForm" onsubmit="App.handleSaveAlbumForm(event)">
+        <input type="hidden" id="inputAlbumId" />
+
+        <div class="form-group-modern">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label-modern mb-0" for="inputAlbumCode">Mã Truy Cập Album <span class="text-danger">*</span></label>
+            <button type="button" class="btn btn-sm btn-link text-primary p-0 text-decoration-none" onclick="document.getElementById('inputAlbumCode').value = App.generateAlbumCode();" title="Tạo mã ngẫu nhiên khác">
+              <i class="bi bi-arrow-clockwise"></i> Đổi mã mới
+            </button>
+          </div>
+          <input type="text" class="form-input-modern font-monospace text-uppercase fw-bold" id="inputAlbumCode" placeholder="VD: DD8899, WED2026..." required maxlength="12" style="letter-spacing:1.5px;font-size:1.05rem;" />
+          <div class="form-hint">Mã ngắn độc nhất để khách hàng nhập vào xem album hoặc gửi link trực tiếp.</div>
+        </div>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="inputAlbumName">Tên Album <span class="text-danger">*</span></label>
+          <input type="text" class="form-input-modern" id="inputAlbumName" placeholder="VD: Diểm Dung - Wedding Day, Kỷ Yếu 12A1..." required autocomplete="off" />
+        </div>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="inputLinkDrive">Link Thư mục Google Drive <span class="text-danger">*</span></label>
+          <textarea class="form-textarea-modern" id="inputLinkDrive" rows="3" placeholder="Dán đường link thư mục Drive (VD: https://drive.google.com/drive/folders/1Sdt199...) hoặc danh sách link ảnh Drive..." required></textarea>
+          <div class="form-hint">
+            <i class="bi bi-info-circle text-primary"></i> Đảm bảo thư mục Drive đã được bật chia sẻ "Bất kỳ ai có liên kết đều xem được".
+          </div>
+        </div>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="selectAlbumStatus">Quyền riêng tư / Trạng thái</label>
+          <select class="form-select-modern" id="selectAlbumStatus" onchange="App.togglePasswordField(this.value)">
+            <option value="0">Public (Ai có link/mã đều xem được - Khuyên dùng)</option>
+            <option value="1">Private Link (Chỉ người có link hoặc mã mới xem được)</option>
+            <option value="2">Private Mật khẩu (Cần thêm mật khẩu riêng để mở album)</option>
+          </select>
+        </div>
+
+        <div class="form-group-modern" id="passwordViewFieldWrap" style="display:none;">
+          <label class="form-label-modern" for="inputPasswordView">Mật khẩu truy cập Album</label>
+          <input type="password" class="form-input-modern" id="inputPasswordView" placeholder="Nhập mật khẩu xem album..." autocomplete="new-password" />
+        </div>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="inputPasswordSelected">Mật khẩu chọn hình (Tùy chọn)</label>
+          <input type="text" class="form-input-modern" id="inputPasswordSelected" placeholder="Bỏ trống nếu không cần mật khẩu khi khách xác nhận chọn..." autocomplete="off" />
+          <div class="form-hint">Dùng để xác thực khi khách hàng muốn chốt hoặc reset danh sách ảnh.</div>
+        </div>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="inputWatermark">Chữ Watermark bản quyền (Tùy chọn)</label>
+          <input type="text" class="form-input-modern" id="inputWatermark" maxlength="30" placeholder="VD: Hoàng Studio • 0988.xxx.xxx" autocomplete="off" />
+          <div class="form-hint">Watermark mờ sẽ được tự động đóng dấu chéo lên toàn bộ ảnh để chống trộm.</div>
+        </div>
+
+        <div class="modal-footer-glass">
+          <button type="button" class="btn-modern btn-glass" onclick="App.closeCreateModal()">Hủy</button>
+          <button type="submit" class="btn-modern btn-primary-glow">Lưu Album</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: CHIA SẺ ALBUM & QR CODE (MÃ ALBUM & LINK TRỰC TIẾP)
+       ==================================================================== -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="glass-modal-card" style="max-width:480px;">
+      <div class="modal-header-glass">
+        <h2>Chia Sẻ Album Cho Khách</h2>
+        <button type="button" class="modal-close-btn" onclick="App.closeShareModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body-form text-center">
+        <h4 id="shareModalAlbumTitle" class="fw-bold mb-3">Tên Album</h4>
+
+        <!-- Mã Album Box -->
+        <div class="share-code-highlight-card mb-3">
+          <div class="small text-muted mb-1 text-uppercase fw-semibold" style="letter-spacing:1px;">Mã Truy Cập Album</div>
+          <div class="d-flex align-items-center justify-content-center gap-2">
+            <span class="share-code-huge font-monospace fw-bold" id="shareModalAlbumCodeDisplay">------</span>
+            <button type="button" class="btn-modern btn-glass py-1 px-3" onclick="App.copyAlbumCode(document.getElementById('shareModalAlbumCodeDisplay').textContent)" title="Sao chép mã">
+              <i class="bi bi-clipboard"></i> Sao chép mã
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Code -->
+        <div id="shareQrCodeContainer" class="d-flex justify-content-center mb-2"></div>
+        <p class="text-muted small mb-3">Quét mã QR bằng Camera điện thoại để vào xem album ngay</p>
+
+        <!-- Direct Link Input -->
+        <div class="text-start mb-3">
+          <label class="form-label-modern mb-1"><i class="bi bi-link-45deg text-primary"></i> Link Xem Trực Tiếp (Gửi qua Zalo / Facebook / SMS)</label>
+          <div class="d-flex gap-2">
+            <input type="text" class="form-input-modern flex-fill" id="shareUrlInput" readonly style="font-size:0.82rem;" />
+            <button type="button" class="btn-modern btn-primary-glow" onclick="App.copyShareUrl()" title="Sao chép liên kết">
+              <i class="bi bi-copy"></i>
+            </button>
+          </div>
+          <div class="form-hint mt-1 text-success"><i class="bi bi-check-circle-fill"></i> Khách hàng mở link là xem & chọn ảnh được ngay, <b>không cần đăng nhập</b>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 3: HƯỚNG DẪN CHỌN & TẢI ẢNH
+       ==================================================================== -->
+  <div class="modal-overlay" id="guideModal">
+    <div class="glass-modal-card" style="max-width:680px;">
+      <div class="modal-header-glass">
+        <h2>Hướng Dẫn Chọn & Tải Ảnh</h2>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('guideModal').classList.remove('open')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body-form text-center p-3">
+        <img src="./assets/huong_dan.jpg" alt="Hướng dẫn chọn và tải ảnh" style="max-width:100%;border-radius:12px;display:block;margin:0 auto;" onerror="this.parentElement.innerHTML='<div class=\'p-4 text-start\'><h5>Cách chọn và duyệt ảnh:</h5><ol class=\'mt-3\'><li>Bấm icon <b>✓</b> để chọn ảnh muốn chỉnh sửa.</li><li>Bấm icon <b>❤️</b> để đánh dấu ảnh yêu thích.</li><li>Bấm icon <b>🖨️ Máy in</b> để chọn kích thước in ảnh (13x18, 15x21, 20x30...).</li><li>Bấm icon <b>📝 Ghi chú</b> để note chi tiết yêu cầu retouch.</li><li>Chọn menu <b>Tải ảnh</b> trên thanh điều khiển để tải trọn gói file .zip về máy!</li></ol></div>';" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 4: GHI CHÚ ẢNH (NOTE EDITOR)
+       ==================================================================== -->
+  <div class="modal-overlay" id="noteEditorModal">
+    <div class="glass-modal-card" style="max-width:460px;">
+      <div class="modal-header-glass">
+        <h2>Ghi Chú Yêu Cầu Chỉnh Sửa</h2>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('noteEditorModal').classList.remove('open')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body-form">
+        <input type="hidden" id="noteEditorPhotoId" />
+        <div class="form-group-modern">
+          <label class="form-label-modern">Nội dung ghi chú cho thợ ảnh</label>
+          <textarea class="form-textarea-modern" id="noteEditorTextarea" rows="4" placeholder="VD: Chỉnh sáng mặt, bóp nhẹ bắp tay, tẩy mụn, chỉnh tone màu film..."></textarea>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn-modern btn-glass" onclick="document.getElementById('noteEditorModal').classList.remove('open')">Đóng</button>
+          <button type="button" class="btn-modern btn-primary-glow" onclick="Gallery.saveNote()">Lưu Ghi Chú</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 5: PC FILE SORTER & LIGHTROOM EXPORT TOOL
+       ==================================================================== -->
+  <div class="modal-overlay" id="pcSorterModal">
+    <div class="glass-modal-card" style="max-width:640px;">
+      <div class="modal-header-glass">
+        <h2>Công Cụ Lọc File Trên Máy Tính</h2>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('pcSorterModal').classList.remove('open')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body-form">
+        <p class="text-muted small mb-3">
+          Sao chép danh sách tên file vào Lightroom / Camera Raw hoặc tự động copy file từ thư mục gốc sang thư mục ảnh chọn trên ổ cứng của bạn.
+        </p>
+
+        <div class="form-group-modern">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label-modern mb-0">Danh sách tên ảnh</label>
+            <button type="button" class="btn-modern btn-glass py-1 px-2" style="font-size:0.78rem;" onclick="PcSorter.copyToClipboard(document.getElementById('pcSorterImageList').value, 'Đã copy toàn bộ tên file!')">
+              <i class="bi bi-clipboard"></i> Copy danh sách
+            </button>
+          </div>
+          <textarea class="form-textarea-modern font-monospace" id="pcSorterImageList" rows="5" style="font-size:0.85rem;"></textarea>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <button type="button" class="btn-modern btn-glass w-100" onclick="PcSorter.chooseSource()">
+              <i class="bi bi-folder2-open text-primary"></i> 1. Chọn Thư Mục Gốc
+            </button>
+            <div id="sourcePathDisplay" class="small text-muted mt-1 text-truncate" style="display:none;"></div>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn-modern btn-glass w-100" onclick="PcSorter.chooseTarget()">
+              <i class="bi bi-folder-check text-success"></i> 2. Chọn Thư Mục Đích
+            </button>
+            <div id="targetPathDisplay" class="small text-muted mt-1 text-truncate" style="display:none;"></div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded mb-3">
+          <span class="small fw-bold">Chế độ sao chép:</span>
+          <div class="d-flex gap-3 small">
+            <label class="d-flex align-items-center gap-1 cursor-pointer">
+              <input type="radio" name="driveSpeedMode" value="ssd" checked /> ⚡ SSD (Copy nhanh song song)
+            </label>
+            <label class="d-flex align-items-center gap-1 cursor-pointer">
+              <input type="radio" name="driveSpeedMode" value="hdd" /> 🛡️ HDD (Copy theo lô 4 file)
+            </label>
+          </div>
+        </div>
+
+        <button type="button" class="btn-modern btn-primary-glow w-100" id="btnStartPcCopy" onclick="PcSorter.startCopyFiles()">
+          <i class="bi bi-play-circle-fill"></i> Bắt đầu sao chép file trên máy tính
+        </button>
+
+        <div class="mt-3">
+          <label class="small text-muted fw-bold">Nhật ký xử lý (Logs):</label>
+          <pre id="pcSorterLog" style="background:#0f172a;color:#38bdf8;padding:10px;border-radius:8px;max-height:120px;overflow-y:auto;font-size:0.78rem;margin:0;"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       LIGHTBOX PRO (TRÌNH XEM ẢNH FULLSCREEN)
+       ==================================================================== -->
+  <div class="lightbox-modal" id="lightboxModal">
+    <!-- Top Bar -->
+    <div class="lightbox-top-bar">
+      <div class="lightbox-counter" id="lightboxCounter">1 / 10</div>
+      <div class="d-flex gap-2">
+        <button class="btn-modern btn-glass text-white" onclick="Lightbox.downloadCurrentPhoto()" title="Tải ảnh này về máy">
+          <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Tải ảnh</span>
+        </button>
+        <button class="modal-close-btn bg-dark text-white" onclick="Lightbox.close()" title="Đóng (Esc)">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center View Image -->
+    <div class="lightbox-content-wrap" id="lightboxContentWrap">
+      <button class="lightbox-nav-btn lightbox-prev-btn" onclick="Lightbox.prev()" title="Ảnh trước (Mũi tên trái)">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="lightbox-image-box">
+        <img src="" alt="Zoom Image" class="lightbox-main-img" id="lightboxMainImg" />
+        <canvas class="wm-canvas-layer" id="lightboxWmCanvas"></canvas>
+      </div>
+
+      <button class="lightbox-nav-btn lightbox-next-btn" onclick="Lightbox.next()" title="Ảnh sau (Mũi tên phải)">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="lightbox-bottom-bar">
+      <button class="btn-modern btn-glass" id="lbBtnSelect" onclick="Lightbox.toggleCurrentSelect()">
+        <i class="bi bi-check-circle"></i> Chọn ảnh
+      </button>
+      <button class="btn-modern btn-glass" id="lbBtnFavorite" onclick="Lightbox.toggleCurrentFavorite()">
+        <i class="bi bi-heart"></i> Yêu thích
+      </button>
+      <button class="btn-modern btn-glass" id="lbBtnPrint" onclick="Lightbox.toggleCurrentNote()">
+        <i class="bi bi-printer"></i> In ảnh
+      </button>
+      <button class="btn-modern btn-glass" id="lbBtnNote" onclick="Lightbox.toggleCurrentNote()">
+        <i class="bi bi-chat-left-dots"></i> Ghi chú
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       DOWNLOAD ZIP PROGRESS BOX
+       ==================================================================== -->
+  <div class="download-progress-box" id="downloadProgressBox">
+    <div class="progress-header-text">
+      <span id="downloadProgressHeader">Đang chuẩn bị tải...</span>
+      <b id="downloadProgressPercent" class="text-primary">0%</b>
+    </div>
+    <div class="progress-track-bg">
+      <div class="progress-fill-bar" id="downloadProgressBar"></div>
+    </div>
+    <div class="progress-subtext" id="downloadProgressSubtext">Đã tải: 0.0 MB</div>
+    <div class="progress-wake-notice" id="downloadWakeNotice" style="display:none;">
+      <i class="bi bi-brightness-high-fill"></i> Màn hình đang được giữ sáng cho đến khi tải xong file ZIP.
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 6: CÀI ĐẶT ĐỒNG BỘ GOOGLE SHEETS
+       ==================================================================== -->
+  <div class="modal-overlay" id="sheetsSettingsModal">
+    <div class="glass-modal-card" style="max-width:560px;">
+      <div class="modal-header-glass">
+        <h2>Cài Đặt Đồng Bộ Google Sheets</h2>
+        <button type="button" class="modal-close-btn" onclick="App.closeSettingsModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <form class="modal-body-form" onsubmit="App.saveSettingsForm(event)">
+        <p class="text-muted small mb-3">
+          Tự động đồng bộ 2 chiều (Đọc và Ghi) danh sách album, ảnh khách chọn, tim, ghi chú lên Google Sheet cá nhân của bạn.
+        </p>
+
+        <div class="form-group-modern">
+          <label class="form-label-modern" for="inputAppsScriptUrl">Google Apps Script Web App URL</label>
+          <input type="url" class="form-input-modern" id="inputAppsScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" required autocomplete="off" />
+        </div>
+
+        <div id="sheetsTestResultBox" style="display:none;"></div>
+
+        <div class="d-flex gap-2 mb-3">
+          <button type="button" class="btn-modern btn-glass flex-fill" onclick="App.testSheetsConnection()">
+            <i class="bi bi-broadcast"></i> Kiểm tra kết nối
+          </button>
+        </div>
+
+        <div class="modal-footer-glass">
+          <button type="button" class="btn-modern btn-glass" onclick="App.closeSettingsModal()">Đóng</button>
+          <button type="submit" class="btn-modern btn-primary-glow">Lưu & Đồng Bộ Ngay</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 7: CẤU HÌNH FIREBASE GOOGLE SIGN-IN
+       ==================================================================== -->
+  <div class="modal-overlay" id="firebaseSetupModal">
+    <div class="glass-modal-card" style="max-width:560px;">
+      <div class="modal-header-glass">
+        <h2>Đăng Nhập Tài Khoản Google</h2>
+        <button type="button" class="modal-close-btn" onclick="Auth.closeFirebaseSetupModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body-form">
+        <p class="text-muted small mb-3">
+          Đăng nhập bằng tài khoản Google để có quyền <b>Tạo Album, Sửa, Xóa và Đổi ảnh bìa</b>. Khách hàng xem album thì <b>không cần đăng nhập</b>.
+        </p>
+
+        <!-- Quick Demo Studio Login -->
+        <div class="p-3 mb-3" style="background:rgba(56, 189, 248, 0.1);border:1px solid rgba(56,189,248,0.25);border-radius:12px;">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-bold text-primary"><i class="bi bi-person-badge-fill"></i> Đăng nhập nhanh quyền Chủ Studio</div>
+              <small class="text-muted">Kích hoạt quyền Admin quản trị tức thì</small>
+            </div>
+            <button type="button" class="btn-modern btn-primary-glow py-1 px-3" onclick="Auth.quickDemoLogin('hoang.studio@gmail.com', 'Nguyễn Minh Hoàng')">
+              Kích hoạt ngay
+            </button>
+          </div>
+        </div>
+
+        <details class="mb-3">
+          <summary class="small text-muted cursor-pointer fw-semibold"><i class="bi bi-gear-fill"></i> Tùy chọn: Kết nối Firebase Project của bạn</summary>
+          <form class="mt-3" onsubmit="Auth.saveFirebaseConfig(event)">
+            <label class="form-label-modern">Dán đoạn mã <code>firebaseConfig</code> từ Firebase Console:</label>
+            <textarea class="form-textarea-modern font-monospace" id="inputFirebaseConfigJson" rows="4" style="font-size:0.8rem;" placeholder='const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "..."
+};'></textarea>
+            <button type="submit" class="btn-modern btn-glass w-100 mt-2">
+              <i class="bi bi-check-circle"></i> Lưu cấu hình Firebase
+            </button>
+          </form>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Libraries & Vendor Scripts -->
+  <script src="./libs/imagesloaded.pkgd.min.js"></script>
+  <script src="./libs/masonry.pkgd.min.js"></script>
+  <script src="./libs/jszip.min.js"></script>
+  <script src="./libs/hammer.min.js"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <!-- Application Modules -->
+  <script src="./js/drive-parser.js"></script>
+  <script src="./js/sheets-sync.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/downloader.js"></script>
+  <script src="./js/pc-sorter.js"></script>
+  <script src="./js/lightbox.js"></script>
+  <script src="./js/gallery.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
