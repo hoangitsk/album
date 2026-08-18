@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 >nul
 title Auto Deploy - Album Photo Harlan
 cls
 
@@ -11,8 +10,9 @@ echo [1/3] Kiem tra cac file thay doi...
 git status -s
 echo.
 
-set /p commit_msg="Nhap noi dung ghi chu commit (Nhan Enter de dung mac dinh: Update website): "
-if "%commit_msg%"=="" set commit_msg=Update website (%date% %time%)
+set commit_msg=
+set /p commit_msg="Nhap ghi chu commit (Nhan Enter de dung mac dinh): "
+if "%commit_msg%"=="" set commit_msg=Update website
 
 echo.
 echo [2/3] Dang them cac file va tao commit...
@@ -26,14 +26,14 @@ git push origin main
 if %ERRORLEVEL% equ 0 (
     echo.
     echo ========================================================
-    echo  ✓ [THANH CONG] Code da duoc day len GitHub!
-    echo  🚀 Vercel dang tu dong cap nhat tai:
+    echo  [THANH CONG] Code da duoc day len GitHub!
+    echo  Vercel dang tu dong cap nhat tai:
     echo     https://albumharlan.vercel.app/
     echo ========================================================
 ) else (
     echo.
     echo ========================================================
-    echo  ✗ [THAT BAI] Co loi xay ra khi push code len GitHub!
+    echo  [THAT BAI] Co loi xay ra khi push code len GitHub!
     echo ========================================================
 )
 
