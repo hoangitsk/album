@@ -62,7 +62,7 @@ const Gallery = (function () {
     const studioNameEl = document.getElementById('albumHeroStudioName');
 
     if (titleEl) titleEl.textContent = currentAlbum.title;
-    if (studioNameEl) studioNameEl.textContent = currentAlbum.author || 'Nguyễn Minh Hoàng';
+    if (studioNameEl) studioNameEl.textContent = currentAlbum.author || 'Harlan - Minh Hoàng';
 
     if (coverEl) {
       const coverPhoto = currentAlbum.photos.find((p) => p.link_id === currentAlbum.cover_id) || currentAlbum.photos[0];

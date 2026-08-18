@@ -51,9 +51,9 @@ const Auth = (function () {
     }
   }
 
-  function quickDemoLogin(email = 'studio.admin@gmail.com', displayName = 'Studio Admin') {
+  function quickDemoLogin(email = 'harlan.minhhoang@gmail.com', displayName = 'Harlan - Minh Hoàng') {
     const demoUser = {
-      uid: 'demo_' + (email.split('@')[0] || 'studio'),
+      uid: 'demo_' + (email.split('@')[0] || 'harlan'),
       displayName: displayName,
       email: email,
       photoURL: './assets/default_avatar.png',

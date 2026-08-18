@@ -1525,6 +1525,41 @@ body {
 }
 
 /* ==========================================================================
+   APP FOOTER STYLES
+   ========================================================================== */
+.app-footer-custom {
+  margin-top: auto;
+  background: #0f172a;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 36px 24px 30px;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-contact-link {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity var(--transition-fast);
+}
+
+.footer-contact-link:hover {
+  opacity: 0.85;
+}
+
+/* ==========================================================================
    MOBILE ADAPTATION
    ========================================================================== */
 @media (max-width: 768px) {
@@ -1542,4 +1577,5 @@ body {
   .liquid-select-wrap { flex: 1; }
   .lightbox-prev-btn { left: 8px; }
   .lightbox-next-btn { right: 8px; }
+  .footer-container { flex-direction: column; text-align: center; gap: 16px; }
 }

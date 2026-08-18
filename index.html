@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Album Pro - Thư Viện Ảnh Google Drive Chuyên Nghiệp</title>
+  <title>Album Photo Harlan - Minh Hoàng | Thư Viện Ảnh Chuyên Nghiệp</title>
   <link rel="shortcut icon" type="image/png" href="./assets/default_avatar.png">
 
   <!-- Stylesheets -->
@@ -24,24 +24,27 @@
       <div class="nav-container">
         <a class="brand-logo" href="#dashboard" onclick="App.navigateTo('#dashboard')">
           <div class="brand-logo-icon">
-            <i class="bi bi-images"></i>
+            <i class="bi bi-camera-fill"></i>
           </div>
           <div>
-            <span class="brand-title-gradient">ALBUM DRIVE</span>
-            <span style="font-size:0.75rem;display:block;color:var(--text-muted);font-weight:500;">STUDIO GALLERY PRO</span>
+            <span class="brand-title-gradient">ALBUM PHOTO HARLAN</span>
+            <span style="font-size:0.72rem;display:block;color:var(--text-muted);font-weight:600;letter-spacing:0.5px;">HARLAN - MINH HOÀNG STUDIO</span>
           </div>
         </a>
 
         <!-- Quick Code Search in Navbar -->
         <div class="nav-code-search-box d-none d-md-flex align-items-center">
           <i class="bi bi-key-fill nav-code-icon text-warning"></i>
-          <input type="text" class="nav-code-input font-monospace text-uppercase" id="navSearchAlbumCode" placeholder="Nhập mã Album (VD: DD8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
+          <input type="text" class="nav-code-input font-monospace text-uppercase" id="navSearchAlbumCode" placeholder="Nhập mã Album (VD: HL8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
           <button type="button" class="nav-code-submit-btn" onclick="App.searchAndOpenAlbum(document.getElementById('navSearchAlbumCode').value)" title="Xem album ngay">
             <i class="bi bi-arrow-right-short fs-5"></i>
           </button>
         </div>
 
         <div class="nav-actions">
+          <a href="https://zalo.me/0337957054" target="_blank" class="btn-modern btn-glass text-success d-none d-lg-inline-flex align-items-center gap-1 text-decoration-none" title="Chat Zalo 0337957054">
+            <i class="bi bi-chat-dots-fill"></i> <span>Zalo: 0337957054</span>
+          </a>
           <div id="navbarAuthContainer" class="d-inline-flex align-items-center"></div>
           <button class="btn-modern btn-glass" onclick="document.getElementById('guideModal').classList.add('open')" title="Hướng dẫn sử dụng">
             <i class="bi bi-question-circle"></i> <span class="d-none d-sm-inline">Hướng dẫn</span>
@@ -70,19 +73,24 @@
                 <span class="studio-status-badge" title="Đang hoạt động"></span>
               </div>
               <div class="studio-meta">
-                <h1>Chào Mừng Quý Khách</h1>
+                <h1>Harlan - Minh Hoàng</h1>
                 <div class="studio-subtitle">
-                  <span><i class="bi bi-camera-fill text-primary"></i> Thư viện ảnh Google Drive chuyên nghiệp</span>
+                  <span><i class="bi bi-camera-fill text-primary"></i> Nhiếp ảnh gia chuyên nghiệp</span>
+                  <span>•</span>
+                  <span><i class="bi bi-telephone-fill text-success"></i> Hotline / Zalo: <a href="https://zalo.me/0337957054" target="_blank" class="text-white fw-bold text-decoration-none">0337957054</a></span>
                   <span>•</span>
                   <span><i class="bi bi-geo-alt-fill text-danger"></i> Việt Nam</span>
                 </div>
               </div>
             </div>
 
-            <div class="d-flex gap-2">
-              <button class="btn-modern btn-glass" onclick="App.openCreateModal()">
-                <i class="bi bi-folder-plus text-primary"></i> Thêm Album Drive
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn-modern btn-primary-glow" onclick="App.openCreateModal()">
+                <i class="bi bi-folder-plus"></i> Thêm Album Mới
               </button>
+              <a href="https://zalo.me/0337957054" target="_blank" class="btn-modern btn-glass text-success text-decoration-none">
+                <i class="bi bi-chat-dots-fill"></i> Nhắn Zalo: 0337957054
+              </a>
             </div>
           </div>
         </section>
@@ -102,7 +110,7 @@
             <div class="guest-code-input-form">
               <div class="guest-input-wrap">
                 <i class="bi bi-key-fill text-warning"></i>
-                <input type="text" id="inputQuickAlbumCode" class="guest-code-input font-monospace text-uppercase" placeholder="Nhập mã (VD: DD8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
+                <input type="text" id="inputQuickAlbumCode" class="guest-code-input font-monospace text-uppercase" placeholder="Nhập mã (VD: HL8899)..." onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
               </div>
               <button type="button" class="btn-modern btn-primary-glow guest-code-btn" onclick="App.searchAndOpenAlbum(document.getElementById('inputQuickAlbumCode').value)">
                 <span>Xem Album</span> <i class="bi bi-arrow-right"></i>
@@ -204,7 +212,7 @@
               <div class="album-hero-studio-meta">
                 <img src="./assets/default_avatar.png" alt="Avatar" class="album-hero-avatar" />
                 <div>
-                  <div class="album-hero-studio-name" id="albumHeroStudioName">Nguyễn Minh Hoàng</div>
+                  <div class="album-hero-studio-name" id="albumHeroStudioName">Harlan - Minh Hoàng</div>
                   <small style="opacity:0.85;">Photo Gallery Studio</small>
                 </div>
               </div>
@@ -384,7 +392,7 @@
 
         <div class="form-group-modern">
           <label class="form-label-modern" for="inputWatermark">Chữ Watermark bản quyền (Tùy chọn)</label>
-          <input type="text" class="form-input-modern" id="inputWatermark" maxlength="30" placeholder="VD: Hoàng Studio • 0988.xxx.xxx" autocomplete="off" />
+          <input type="text" class="form-input-modern" id="inputWatermark" maxlength="35" placeholder="VD: Harlan Studio • 0337957054" autocomplete="off" />
           <div class="form-hint">Watermark mờ sẽ được tự động đóng dấu chéo lên toàn bộ ảnh để chống trộm.</div>
         </div>
 
@@ -674,7 +682,7 @@
               <div class="fw-bold text-primary"><i class="bi bi-person-badge-fill"></i> Đăng nhập nhanh quyền Chủ Studio</div>
               <small class="text-muted">Kích hoạt quyền Admin quản trị tức thì</small>
             </div>
-            <button type="button" class="btn-modern btn-primary-glow py-1 px-3" onclick="Auth.quickDemoLogin('hoang.studio@gmail.com', 'Nguyễn Minh Hoàng')">
+            <button type="button" class="btn-modern btn-primary-glow py-1 px-3" onclick="Auth.quickDemoLogin('harlan.minhhoang@gmail.com', 'Harlan - Minh Hoàng')">
               Kích hoạt ngay
             </button>
           </div>
@@ -697,6 +705,47 @@
       </div>
     </div>
   </div>
+
+  <!-- ====================================================================
+       APP FOOTER (HARLAN - MINH HOÀNG STUDIO)
+       ==================================================================== -->
+  <footer class="app-footer-custom">
+    <div class="footer-container">
+      <div class="footer-brand-box">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-camera-fill text-primary fs-4"></i>
+          <span class="fw-bold fs-5 text-white">Album Photo Harlan</span>
+        </div>
+        <p class="text-muted small mb-0" style="max-width:380px;">
+          Thư viện ảnh Google Drive chất lượng cao phục vụ khách hàng xem, chọn ảnh, thả tim và tải ảnh trọn gói.
+        </p>
+      </div>
+
+      <div class="footer-contacts-box">
+        <div class="fw-bold text-white small mb-2 text-uppercase" style="letter-spacing:1px;">Liên hệ Studio</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="https://zalo.me/0337957054" target="_blank" class="footer-contact-link text-success text-decoration-none">
+            <i class="bi bi-chat-dots-fill"></i> Zalo: <b>0337957054</b>
+          </a>
+          <a href="tel:0337957054" class="footer-contact-link text-primary text-decoration-none">
+            <i class="bi bi-telephone-fill"></i> Hotline: <b>0337957054</b>
+          </a>
+          <div class="text-muted small">
+            <i class="bi bi-person-fill text-warning"></i> Nhiếp ảnh gia: <b>Harlan - Minh Hoàng</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-copyright-box">
+        <div class="text-muted small">
+          © 2026 <b>Album Photo Harlan</b>. All rights reserved.
+        </div>
+        <div class="text-muted small mt-1" style="font-size:0.75rem;">
+          Studio Gallery Pro • Powered by Google Drive
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- JavaScript Libraries & Vendor Scripts -->
   <script src="./libs/imagesloaded.pkgd.min.js"></script>

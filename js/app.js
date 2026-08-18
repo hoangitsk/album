@@ -4,62 +4,12 @@
  */
 
 const App = (function () {
-  const STORAGE_KEY = 'web_album_pro_data_v1';
+  const STORAGE_KEY = 'web_album_harlan_v2';
   let albums = [];
   let currentAlbumId = null;
 
-  // Dữ liệu mẫu ban đầu từ template Diểm Dung và các bộ ảnh chất lượng cao
-  const SAMPLE_ALBUMS = [
-    {
-      id: 'diem-dung-wedding',
-      code: 'DD8899',
-      title: 'Diểm Dung - Wedding Story',
-      author: 'Nguyễn Minh Hoàng',
-      avatar: './assets/default_avatar.png',
-      owner_uid: 'sample_owner',
-      owner_email: 'demo@studio.com',
-      link_drive: 'https://drive.google.com/drive/folders/1UK-p0goflWCWOqV04lU9ZFuezM4Kyxzk',
-      cover_id: '1Zxx99GBmd2-DWY-4v89d-cvBZ3uvCZy3',
-      status: '0', // Public
-      password_view: '',
-      password_selected: '',
-      watermark: 'Hoàng Studio • 0988.xxx.xxx',
-      createdAt: '2026-08-18T08:00:00.000Z',
-      photos: [
-        { id_photo: 'p_16012329', link_id: '1Zxx99GBmd2-DWY-4v89d-cvBZ3uvCZy3', filename: 'NMH00822.JPG', selected: true, tim: true, in_anh: true, size_anh: '20x30', note: 'Chỉnh sáng da cô dâu' },
-        { id_photo: 'p_16012333', link_id: '1rK8MwE_OflDOY73NAxa4_8atKBRHRKKQ', filename: 'NMH00828.JPG', selected: true, tim: false, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_16012334', link_id: '1Vsef8vbFXHlrAtzJykJr7Mv-1CNjSAEf', filename: 'NMH00832.JPG', selected: false, tim: true, in_anh: true, size_anh: '15x21', note: 'Lấy góc rộng' },
-        { id_photo: 'p_16012335', link_id: '1FODJOknLbX0XfBnErm1D4CZhuj-bZCYn', filename: 'NMH00835.JPG', selected: false, tim: false, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_16012336', link_id: '17P0uTz88F-LzJtN78ZtWl043K1fVq-tF', filename: 'NMH00842.JPG', selected: true, tim: true, in_anh: false, size_anh: '', note: 'Tone màu ấm' },
-        { id_photo: 'p_16012337', link_id: '1pM9_ZJgY4eO6qWkM6vG4jW8Z9tF2qL0X', filename: 'NMH00856.JPG', selected: false, tim: false, in_anh: true, size_anh: '30x45', note: '' },
-        { id_photo: 'p_16012338', link_id: '1Sdt199fRqKytw5XzQJ67eqAQdaLTe6SI', filename: 'NMH00865.JPG', selected: true, tim: false, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_16012339', link_id: '1kL8MwE_OflDOY73NAxa4_8atKBRHRKKQ', filename: 'NMH00870.JPG', selected: false, tim: true, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_16012340', link_id: '1mZxx99GBmd2-DWY-4v89d-cvBZ3uvCZy3', filename: 'NMH00888.JPG', selected: false, tim: false, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_16012341', link_id: '1nVsef8vbFXHlrAtzJykJr7Mv-1CNjSAEf', filename: 'NMH00895.JPG', selected: true, tim: true, in_anh: true, size_anh: '60x90', note: 'In ảnh cổng tiệc' },
-      ],
-    },
-    {
-      id: 'ky-yeu-thanh-xuan',
-      code: 'KY12A1',
-      title: 'Kỷ Yếu Tốt Nghiệp - 12A1 Thanh Xuân',
-      author: 'Nguyễn Minh Hoàng',
-      avatar: './assets/default_avatar.png',
-      owner_uid: 'sample_owner',
-      owner_email: 'demo@studio.com',
-      link_drive: 'https://drive.google.com/drive/folders/1Sdt199fRqKytw5XzQJ67eqAQdaLTe6SI',
-      cover_id: '17P0uTz88F-LzJtN78ZtWl043K1fVq-tF',
-      status: '1', // Private link
-      password_view: '',
-      password_selected: '123456',
-      watermark: 'KỶ YẾU 12A1',
-      createdAt: '2026-08-15T10:30:00.000Z',
-      photos: [
-        { id_photo: 'p_ky_1', link_id: '17P0uTz88F-LzJtN78ZtWl043K1fVq-tF', filename: 'KY_001.JPG', selected: true, tim: true, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_ky_2', link_id: '1Zxx99GBmd2-DWY-4v89d-cvBZ3uvCZy3', filename: 'KY_002.JPG', selected: false, tim: true, in_anh: false, size_anh: '', note: '' },
-        { id_photo: 'p_ky_3', link_id: '1rK8MwE_OflDOY73NAxa4_8atKBRHRKKQ', filename: 'KY_003.JPG', selected: true, tim: false, in_anh: true, size_anh: '13x18', note: 'Ảnh tập thể' },
-      ],
-    },
-  ];
+  // Dữ liệu ban đầu rỗng để người dùng tự do tạo Album mới
+  const SAMPLE_ALBUMS = [];
 
   function generateAlbumCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -109,11 +59,11 @@ const App = (function () {
         });
         if (hasChanges) saveToStorage();
       } else {
-        albums = [...SAMPLE_ALBUMS];
+        albums = [];
         saveToStorage();
       }
     } catch (e) {
-      albums = [...SAMPLE_ALBUMS];
+      albums = [];
     }
   }
 
@@ -250,11 +200,13 @@ const App = (function () {
     if (user) {
       // Đã đăng nhập: Giao diện Studio Admin
       studioMetaEl.innerHTML = `
-        <h1>${user.displayName || 'Chủ Studio'}</h1>
+        <h1>${user.displayName || 'Harlan - Minh Hoàng'}</h1>
         <div class="studio-subtitle">
-          <span><i class="bi bi-camera-fill text-primary"></i> Studio: <b>${user.displayName}</b> (${user.email || 'Admin'})</span>
+          <span><i class="bi bi-camera-fill text-primary"></i> Studio: <b>${user.displayName || 'Harlan - Minh Hoàng'}</b></span>
           <span>•</span>
-          <span><i class="bi bi-shield-check text-success"></i> Quyền Quản Trị Album</span>
+          <span><i class="bi bi-telephone-fill text-success"></i> Hotline / Zalo: <a href="https://zalo.me/0337957054" target="_blank" class="text-white fw-bold text-decoration-none">0337957054</a></span>
+          <span>•</span>
+          <span><i class="bi bi-shield-check text-success"></i> Quyền Quản Trị</span>
         </div>
       `;
 
@@ -266,11 +218,13 @@ const App = (function () {
     } else {
       // Chưa đăng nhập: Giao diện chào đón Khách Hàng
       studioMetaEl.innerHTML = `
-        <h1>Chào Mừng Quý Khách</h1>
+        <h1>Harlan - Minh Hoàng</h1>
         <div class="studio-subtitle">
-          <span><i class="bi bi-stars text-warning"></i> Thư viện ảnh Google Drive chất lượng cao</span>
+          <span><i class="bi bi-camera-fill text-primary"></i> Nhiếp ảnh gia chuyên nghiệp</span>
           <span>•</span>
-          <span><i class="bi bi-unlock-fill text-success"></i> Xem và chọn ảnh tự do không cần đăng nhập</span>
+          <span><i class="bi bi-telephone-fill text-success"></i> Hotline / Zalo: <a href="https://zalo.me/0337957054" target="_blank" class="text-white fw-bold text-decoration-none">0337957054</a></span>
+          <span>•</span>
+          <span><i class="bi bi-unlock-fill text-warning"></i> Xem & chọn ảnh tự do không cần đăng nhập</span>
         </div>
       `;
     }
@@ -314,12 +268,12 @@ const App = (function () {
 
     // Phân quyền hiển thị:
     // - Khi đã đăng nhập: CHỈ hiển thị các album do chính tài khoản đó tạo
-    // - Khi chưa đăng nhập (Khách): Hiển thị các album Public mẫu hoặc ô nhập mã
+    // - Khi chưa đăng nhập (Khách): Hiển thị các album Public
     let userAlbums = [];
     if (user) {
       userAlbums = albums.filter((a) => a.owner_uid === user.uid || (user.email && a.owner_email === user.email));
     } else {
-      userAlbums = albums.filter((a) => a.status === '0' || a.owner_uid === 'sample_owner' || !a.owner_uid);
+      userAlbums = albums.filter((a) => a.status === '0' || !a.owner_uid || a.owner_uid === 'sample_owner');
     }
 
     let filtered = [...userAlbums];
@@ -341,7 +295,7 @@ const App = (function () {
       if (user) {
         grid.innerHTML = `
           <div class="empty-state-box">
-            <i class="bi bi-folder-plus empty-state-icon"></i>
+            <i class="bi bi-folder-plus empty-state-icon text-primary"></i>
             <h3>Bạn chưa có album nào trong tài khoản này</h3>
             <p class="text-muted">Nhấn nút bên dưới để tạo album đầu tiên và chia sẻ mã cho khách hàng!</p>
             <button class="btn-modern btn-primary-glow mt-3" onclick="App.openCreateModal()">
@@ -352,14 +306,26 @@ const App = (function () {
       } else {
         grid.innerHTML = `
           <div class="empty-state-box">
-            <i class="bi bi-key-fill empty-state-icon text-warning"></i>
-            <h3>Nhập Mã Album để xem ảnh</h3>
-            <p class="text-muted">Khách hàng chỉ cần nhập mã album (hoặc mở đường link studio gửi) để vào xem trực tiếp.</p>
-            <div class="quick-code-input-group mt-3 mx-auto" style="max-width:400px;">
-              <input type="text" id="emptyStateCodeInput" class="form-input-modern text-center fw-bold" placeholder="Nhập mã (VD: DD8899)" onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
-              <button class="btn-modern btn-primary-glow w-100 mt-2" onclick="App.searchAndOpenAlbum(document.getElementById('emptyStateCodeInput').value)">
-                <i class="bi bi-arrow-right-circle"></i> Xem Album Ngay
-              </button>
+            <i class="bi bi-camera-fill empty-state-icon text-primary mb-2"></i>
+            <h3 class="fw-bold">Thư Viện Album Photo Harlan</h3>
+            <p class="text-muted" style="max-width: 520px; margin: 0 auto 16px; line-height: 1.6;">
+              Chào mừng quý khách đến với dịch vụ ảnh chuyên nghiệp <b>Harlan - Minh Hoàng</b>. Khách hàng vui lòng nhập <b>Mã Album</b> do studio cung cấp để vào xem và chọn ảnh trực tiếp!
+            </p>
+            <div class="quick-code-input-group mt-3 mx-auto" style="max-width:440px;">
+              <div class="d-flex gap-2">
+                <input type="text" id="emptyStateCodeInput" class="form-input-modern text-center fw-bold font-monospace text-uppercase" placeholder="Nhập mã (VD: HL8899)" onkeydown="if(event.key==='Enter') App.searchAndOpenAlbum(this.value)" />
+                <button class="btn-modern btn-primary-glow" onclick="App.searchAndOpenAlbum(document.getElementById('emptyStateCodeInput').value)">
+                  <i class="bi bi-arrow-right-circle"></i> Xem Album
+                </button>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 d-flex flex-wrap justify-content-center gap-3" style="border-top: 1px dashed rgba(226, 232, 240, 0.8);">
+              <a href="https://zalo.me/0337957054" target="_blank" class="btn-modern btn-glass text-success">
+                <i class="bi bi-chat-dots-fill"></i> Nhắn Zalo: 0337957054
+              </a>
+              <a href="tel:0337957054" class="btn-modern btn-glass text-primary">
+                <i class="bi bi-telephone-fill"></i> Hotline: 0337957054
+              </a>
             </div>
           </div>
         `;
@@ -618,7 +584,7 @@ const App = (function () {
       id: editId || 'alb_' + Date.now().toString(36),
       code: code,
       title: title,
-      author: user ? user.displayName : (existingAlbum ? existingAlbum.author : 'Nguyễn Minh Hoàng'),
+      author: user ? user.displayName : (existingAlbum ? existingAlbum.author : 'Harlan - Minh Hoàng'),
       avatar: user && user.photoURL ? user.photoURL : './assets/default_avatar.png',
       owner_uid: user ? user.uid : (existingAlbum ? existingAlbum.owner_uid : 'guest'),
       owner_email: user ? user.email : (existingAlbum ? existingAlbum.owner_email : ''),
@@ -627,7 +593,7 @@ const App = (function () {
       status: status,
       password_view: status === '2' ? passView : '',
       password_selected: passSelected,
-      watermark: watermark,
+      watermark: watermark || 'Harlan Studio • 0337957054',
       createdAt: existingAlbum ? existingAlbum.createdAt : new Date().toISOString(),
       photos: photos,
     };
