@@ -215,6 +215,36 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+.btn-glass.text-danger {
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.btn-glass.text-danger:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+.btn-glass.text-warning {
+  color: #f59e0b !important;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.btn-glass.text-warning:hover {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+.btn-glass.text-success {
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.btn-glass.text-success:hover {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
 
 /* ==========================================================================
    PAGE SECTIONS / VIEWS

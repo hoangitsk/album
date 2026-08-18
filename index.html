@@ -46,6 +46,9 @@
             <i class="bi bi-chat-dots-fill"></i> <span>Zalo: 0337957054</span>
           </a>
           <div id="navbarAuthContainer" class="d-inline-flex align-items-center"></div>
+          <button class="btn-modern btn-glass" onclick="App.openSettingsModal()" title="Cài đặt đồng bộ Google Sheets & Apps Script Drive Scanner">
+            <i class="bi bi-gear-fill"></i> <span class="d-none d-md-inline">Cài đặt</span>
+          </button>
           <button class="btn-modern btn-glass" onclick="document.getElementById('guideModal').classList.add('open')" title="Hướng dẫn sử dụng">
             <i class="bi bi-question-circle"></i> <span class="d-none d-sm-inline">Hướng dẫn</span>
           </button>
@@ -198,11 +201,12 @@
         <section class="album-hero-cover" id="albumHeroCover">
           <div class="album-hero-overlay"></div>
 
-          <!-- Top back button -->
-          <div class="album-hero-top-nav">
+          <!-- Top back button & Owner Quick Actions -->
+          <div class="album-hero-top-nav d-flex justify-content-between align-items-center flex-wrap gap-2">
             <a class="back-to-dashboard-btn" href="#dashboard" onclick="App.navigateTo('#dashboard')">
               <i class="bi bi-arrow-left"></i> <span>Quay lại danh sách Album</span>
             </a>
+            <div id="albumHeroOwnerActions" class="album-hero-owner-actions-wrap" style="display:none;"></div>
           </div>
 
           <!-- Bottom Album Info -->
@@ -270,15 +274,16 @@
                 <i class="bi bi-chevron-down liquid-select-arrow"></i>
               </div>
 
-              <!-- Reset Selection Dropdown -->
+              <!-- Reset Selection & Manage Dropdown -->
               <div class="liquid-select-wrap">
-                <select class="liquid-select" id="selectResetActions" onchange="if(this.value){ Gallery.resetSelections(this.value); this.value=''; }">
-                  <option value="" selected disabled>🔄 Reset lựa chọn</option>
+                <select class="liquid-select" id="selectResetActions" onchange="if(this.value==='delete_selected'){ Gallery.deleteSelectedPhotos(); this.value=''; } else if(this.value){ Gallery.resetSelections(this.value); this.value=''; }">
+                  <option value="" selected disabled>🔄 Reset & Tác vụ</option>
                   <option value="1">Reset ảnh đã chọn</option>
                   <option value="3">Reset ảnh yêu thích</option>
                   <option value="2">Reset ảnh in</option>
                   <option value="4">Reset ghi chú</option>
                   <option value="all">Reset tất cả lựa chọn</option>
+                  <option value="delete_selected">🗑️ Xóa các ảnh đã chọn (Admin)</option>
                 </select>
                 <i class="bi bi-chevron-down liquid-select-arrow"></i>
               </div>
@@ -396,9 +401,14 @@
           <div class="form-hint">Watermark mờ sẽ được tự động đóng dấu chéo lên toàn bộ ảnh để chống trộm.</div>
         </div>
 
-        <div class="modal-footer-glass">
-          <button type="button" class="btn-modern btn-glass" onclick="App.closeCreateModal()">Hủy</button>
-          <button type="submit" class="btn-modern btn-primary-glow">Lưu Album</button>
+        <div class="modal-footer-glass d-flex justify-content-between align-items-center">
+          <button type="button" class="btn-modern btn-glass text-danger" id="btnModalDeleteAlbum" style="display:none;" title="Xóa vĩnh viễn Album này">
+            <i class="bi bi-trash-fill"></i> <span>Xóa Album Này</span>
+          </button>
+          <div class="d-flex gap-2 ms-auto">
+            <button type="button" class="btn-modern btn-glass" onclick="App.closeCreateModal()">Hủy</button>
+            <button type="submit" class="btn-modern btn-primary-glow" id="btnSubmitAlbumForm">Lưu Album</button>
+          </div>
         </div>
       </form>
     </div>
@@ -449,18 +459,42 @@
   </div>
 
   <!-- ====================================================================
-       MODAL 3: HƯỚNG DẪN CHỌN & TẢI ẢNH
+       MODAL 3: HƯỚNG DẪN SỬ DỤNG
        ==================================================================== -->
   <div class="modal-overlay" id="guideModal">
-    <div class="glass-modal-card" style="max-width:680px;">
+    <div class="glass-modal-card" style="max-width:700px;">
       <div class="modal-header-glass">
-        <h2>Hướng Dẫn Chọn & Tải Ảnh</h2>
+        <h2>Hướng Dẫn Sử Dụng Web Album Pro</h2>
         <button type="button" class="modal-close-btn" onclick="document.getElementById('guideModal').classList.remove('open')">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
-      <div class="modal-body-form text-center p-3">
-        <img src="./assets/huong_dan.jpg" alt="Hướng dẫn chọn và tải ảnh" style="max-width:100%;border-radius:12px;display:block;margin:0 auto;" onerror="this.parentElement.innerHTML='<div class=\'p-4 text-start\'><h5>Cách chọn và duyệt ảnh:</h5><ol class=\'mt-3\'><li>Bấm icon <b>✓</b> để chọn ảnh muốn chỉnh sửa.</li><li>Bấm icon <b>❤️</b> để đánh dấu ảnh yêu thích.</li><li>Bấm icon <b>🖨️ Máy in</b> để chọn kích thước in ảnh (13x18, 15x21, 20x30...).</li><li>Bấm icon <b>📝 Ghi chú</b> để note chi tiết yêu cầu retouch.</li><li>Chọn menu <b>Tải ảnh</b> trên thanh điều khiển để tải trọn gói file .zip về máy!</li></ol></div>';" />
+      <div class="modal-body-form p-3 text-start">
+        <div class="accordion-custom">
+          <!-- Phần 1: Dành cho Khách hàng -->
+          <div class="p-3 mb-3" style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.2);border-radius:12px;">
+            <h5 class="fw-bold text-primary mb-2"><i class="bi bi-person-check-fill"></i> Dành Cho Khách Hàng (Xem & Chọn Ảnh)</h5>
+            <ol class="small mb-0 ps-3" style="line-height:1.7;">
+              <li><b>Nhập mã Album</b> hoặc bấm link do Studio gửi để vào xem ảnh ngay (không cần đăng nhập).</li>
+              <li>Bấm icon <b>✓</b> để chọn ảnh muốn thợ chỉnh sửa / retouch.</li>
+              <li>Bấm icon <b>❤️</b> để đánh dấu những bức ảnh ưng ý nhất.</li>
+              <li>Bấm icon <b>🖨️ Máy in</b> để chọn kích cỡ in ảnh (13x18, 15x21, 20x30, 60x90...).</li>
+              <li>Bấm icon <b>📝 Ghi chú</b> để note chi tiết yêu cầu sửa da, màu sắc, bóp dáng...</li>
+              <li>Dùng menu <b>📥 Tải ảnh ZIP</b> trên thanh điều khiển để tải trọn bộ ảnh chất lượng cao về máy!</li>
+            </ol>
+          </div>
+
+          <!-- Phần 2: Dành cho Chủ Studio -->
+          <div class="p-3" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;">
+            <h5 class="fw-bold text-warning mb-2"><i class="bi bi-camera-fill"></i> Dành Cho Chủ Studio (Quản Trị Album & Google Drive)</h5>
+            <ul class="small mb-0 ps-3" style="line-height:1.7;">
+              <li><b>Tải toàn bộ 500+ / 1000+ ảnh từ Google Drive:</b> Dán đường link thư mục Drive (đã bật chế độ <i>"Bất kỳ ai có liên kết đều xem được"</i>). Hệ thống tự động quét toàn bộ file ảnh, lấy đúng tên gốc (VD: <code>IMG_0001.JPG</code>, <code>DSC_1234.JPG</code>) và File ID.</li>
+              <li><b>Quét lại ảnh mới thêm vào Drive:</b> Bấm nút <b>🔄 Quét lại Drive</b> trên thanh điều hướng đầu trang Album để cập nhật thêm ảnh mới mà vẫn giữ nguyên các lựa chọn/tim/ghi chú trước đó của khách.</li>
+              <li><b>Xóa Album:</b> Bấm nút <b>🗑️ Xóa Album</b> trên thanh điều hướng đầu trang Album hoặc nút <b>🗑️ Xóa Album Này</b> trong popup Sửa Album để xóa vĩnh viễn.</li>
+              <li><b>Xóa từng ảnh / Xóa nhiều ảnh:</b> Bấm icon <b>🗑️</b> trên từng thẻ ảnh hoặc chọn mục <i>"🗑️ Xóa các ảnh đã chọn (Admin)"</i> trong menu Tác vụ.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -650,6 +684,24 @@
             <i class="bi bi-broadcast"></i> Kiểm tra kết nối
           </button>
         </div>
+
+        <!-- Google Apps Script Code Accordion -->
+        <details class="mb-3" style="background:rgba(15,23,42,0.03);padding:10px 14px;border-radius:10px;border:1px solid var(--border-light);">
+          <summary class="small fw-bold text-primary cursor-pointer d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-code-slash"></i> Xem mã nguồn Google Apps Script (Quét 500+ ảnh Drive)</span>
+          </summary>
+          <div class="mt-2">
+            <p class="text-muted small mb-2" style="font-size:0.8rem;">
+              Dán đoạn mã này vào file <code>Code.gs</code> trong Google Apps Script của bạn rồi nhấn <b>Triển khai (Deploy) &gt; Tùy chọn quản lý bản triển khai mới</b> để kích hoạt tính năng quét 500+ ảnh tự động:
+            </p>
+            <div class="d-flex justify-content-end mb-2">
+              <button type="button" class="btn-modern btn-glass py-1 px-2" style="font-size:0.78rem;" onclick="PcSorter.copyToClipboard(SheetsSync.getAppsScriptCodeTemplate(), 'Đã sao chép mã nguồn Apps Script!')">
+                <i class="bi bi-clipboard"></i> Sao chép toàn bộ mã
+              </button>
+            </div>
+            <textarea class="form-textarea-modern font-monospace" id="txtAppsScriptTemplate" rows="8" readonly style="font-size:0.75rem;background:#0f172a;color:#38bdf8;"></textarea>
+          </div>
+        </details>
 
         <div class="modal-footer-glass">
           <button type="button" class="btn-modern btn-glass" onclick="App.closeSettingsModal()">Đóng</button>

@@ -116,11 +116,32 @@ const App = (function () {
       Auth.requireAuth(() => deleteAlbum(id));
       return;
     }
-    if (confirm('Bạn có chắc chắn muốn xóa album này không?')) {
+    const album = albums.find((a) => a.id === id);
+    const title = album ? `"${album.title}"` : 'này';
+    if (confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn album ${title} không?\nMọi dữ liệu chọn ảnh, ghi chú và tim sẽ bị xóa hoàn toàn.`)) {
       albums = albums.filter((a) => a.id !== id);
       saveToStorage();
-      renderDashboard();
+
+      // Đồng bộ xóa lên Google Sheet
+      if (typeof SheetsSync !== 'undefined') {
+        SheetsSync.deleteAlbumFromCloud(id);
+      }
+
+      closeCreateModal();
+
+      // Nếu đang đứng trong trang xem Album thì quay về dashboard
+      if (window.location.hash.startsWith('#album/') || window.location.hash.startsWith('#code/')) {
+        navigateTo('#dashboard');
+      } else {
+        renderDashboard();
+      }
       showToast('Đã xóa album thành công!', 'info');
+    }
+  }
+
+  function deleteCurrentAlbum() {
+    if (currentAlbumId) {
+      deleteAlbum(currentAlbumId);
     }
   }
 
@@ -462,9 +483,95 @@ const App = (function () {
     const albumView = document.getElementById('albumDetailView');
     if (albumView) albumView.classList.add('active');
 
+    // Hiển thị nút Sửa / Quét lại / Xóa Album cho Chủ Studio trên đầu trang
+    renderAlbumOwnerNavActions(album);
+
     // Khởi tạo thư viện ảnh Gallery (Khách hàng xem tự do, không cần đăng nhập)
     window.Gallery?.init(album);
     window.scrollTo(0, 0);
+
+    // 🔄 Tự động đồng bộ ngầm ảnh mới từ Google Drive khi mở Album
+    if (album.link_drive) {
+      autoSyncAlbumPhotosBg(album);
+    }
+  }
+
+  /**
+   * Đồng bộ ngầm ảnh từ Google Drive để cập nhật ảnh mới thêm/xóa mà không cần bấm Quét lại
+   */
+  async function autoSyncAlbumPhotosBg(album) {
+    if (!album || !album.link_drive) return;
+    try {
+      const scannedPhotos = await DriveParser.scanDriveFolder(album.link_drive);
+      if (scannedPhotos && scannedPhotos.length > 0) {
+        const oldMap = new Map();
+        (album.photos || []).forEach((p) => {
+          if (p.link_id) oldMap.set(p.link_id, p);
+          if (p.filename) oldMap.set(p.filename, p);
+        });
+
+        let hasChanges = false;
+        if (scannedPhotos.length !== (album.photos || []).length) hasChanges = true;
+
+        const mergedPhotos = scannedPhotos.map((np) => {
+          const old = oldMap.get(np.link_id) || oldMap.get(np.filename);
+          if (!old) hasChanges = true; // Phát hiện ảnh mới chưa từng có
+          return old ? {
+            ...np,
+            selected: old.selected || false,
+            tim: old.tim || false,
+            in_anh: old.in_anh || false,
+            size_anh: old.size_anh || '',
+            note: old.note || '',
+          } : np;
+        });
+
+        if (hasChanges) {
+          album.photos = mergedPhotos;
+          if (!album.cover_id && mergedPhotos.length > 0) {
+            album.cover_id = mergedPhotos[0].link_id;
+          }
+
+          saveAlbum(album);
+          
+          // Nếu người dùng vẫn đang ở trang xem Album này, cập nhật lại giao diện Gallery
+          if (currentAlbumId === album.id && window.Gallery && typeof window.Gallery.init === 'function') {
+            window.Gallery.init(album);
+            showToast('Đã tự động tải ảnh mới được thêm từ Google Drive!', 'info');
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Lỗi khi tự động quét Drive ngầm:', err);
+    }
+  }
+
+  function renderAlbumOwnerNavActions(album) {
+    const ownerNavEl = document.getElementById('albumHeroOwnerActions');
+    if (!ownerNavEl) return;
+
+    const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
+    const isOwner = user && (album.owner_uid === user.uid || (user.email && album.owner_email === user.email) || (user.uid && user.uid.startsWith('demo_')));
+
+    if (isOwner || (user && user.uid)) {
+      ownerNavEl.innerHTML = `
+        <div class="d-inline-flex align-items-center gap-2">
+          <button class="btn-modern btn-glass" onclick="App.openEditModal('${album.id}')" title="Chỉnh sửa Album">
+            <i class="bi bi-pencil-square"></i> <span class="d-none d-md-inline">Sửa Album</span>
+          </button>
+          <button class="btn-modern btn-glass text-warning" onclick="App.rescanCurrentAlbumPhotos('${album.id}')" title="Quét lại toàn bộ ảnh từ Google Drive">
+            <i class="bi bi-arrow-repeat"></i> <span class="d-none d-md-inline">Quét lại Drive</span>
+          </button>
+          <button class="btn-modern btn-glass text-danger" onclick="App.deleteCurrentAlbum()" title="Xóa vĩnh viễn Album này">
+            <i class="bi bi-trash-fill"></i> <span class="d-none d-md-inline">Xóa Album</span>
+          </button>
+        </div>
+      `;
+      ownerNavEl.style.display = 'inline-flex';
+    } else {
+      ownerNavEl.innerHTML = '';
+      ownerNavEl.style.display = 'none';
+    }
   }
 
   /* ==========================================================================
@@ -480,11 +587,13 @@ const App = (function () {
     const titleEl = document.getElementById('modalFormTitle');
     const albumIdInput = document.getElementById('inputAlbumId');
     const albumCodeInput = document.getElementById('inputAlbumCode');
+    const deleteBtn = document.getElementById('btnModalDeleteAlbum');
 
     if (form) form.reset();
     if (albumIdInput) albumIdInput.value = '';
     if (albumCodeInput) albumCodeInput.value = generateAlbumCode(); // Tự động sinh mã mới
     if (titleEl) titleEl.textContent = 'Tạo Album Mới';
+    if (deleteBtn) deleteBtn.style.display = 'none'; // Ẩn nút xóa khi tạo mới
     togglePasswordField('0');
 
     if (modal) modal.classList.add('open');
@@ -508,6 +617,7 @@ const App = (function () {
     const passViewInput = document.getElementById('inputPasswordView');
     const passSelectInput = document.getElementById('inputPasswordSelected');
     const watermarkInput = document.getElementById('inputWatermark');
+    const deleteBtn = document.getElementById('btnModalDeleteAlbum');
 
     if (titleEl) titleEl.textContent = 'Chỉnh Sửa Album';
     if (albumIdInput) albumIdInput.value = album.id;
@@ -518,6 +628,12 @@ const App = (function () {
     if (passViewInput) passViewInput.value = album.password_view || '';
     if (passSelectInput) passSelectInput.value = album.password_selected || '';
     if (watermarkInput) watermarkInput.value = album.watermark || '';
+
+    // Hiện nút xóa album khi đang chỉnh sửa
+    if (deleteBtn) {
+      deleteBtn.style.display = 'inline-flex';
+      deleteBtn.onclick = () => deleteAlbum(album.id);
+    }
 
     togglePasswordField(album.status || '0');
     if (modal) modal.classList.add('open');
@@ -539,6 +655,7 @@ const App = (function () {
     const passViewInput = document.getElementById('inputPasswordView');
     const passSelectInput = document.getElementById('inputPasswordSelected');
     const watermarkInput = document.getElementById('inputWatermark');
+    const submitBtn = document.querySelector('#albumCreateForm button[type="submit"]');
 
     const title = nameInput.value.trim();
     const linkDrive = driveInput.value.trim();
@@ -563,19 +680,58 @@ const App = (function () {
       return;
     }
 
+    // Hiển thị trạng thái đang quét ảnh
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Lưu Album';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Đang quét ảnh Google Drive...';
+    }
+
     // Trích xuất File ID / Photos từ Link Drive
-    let photos = existingAlbum ? existingAlbum.photos : [];
+    let photos = existingAlbum ? (existingAlbum.photos || []) : [];
 
-    // Nếu tạo mới hoặc đổi link Drive
-    if (!existingAlbum || existingAlbum.link_drive !== linkDrive) {
-      const folderId = DriveParser.extractFolderId(linkDrive);
-      const parsedPhotos = DriveParser.parseMultipleLinks(linkDrive);
+    // Nếu tạo mới hoặc đổi link Drive hoặc đang có <= 7 ảnh mẫu
+    if (!existingAlbum || existingAlbum.link_drive !== linkDrive || photos.length <= 7) {
+      try {
+        const scannedPhotos = await DriveParser.scanDriveFolder(linkDrive);
+        if (scannedPhotos && scannedPhotos.length > 0) {
+          // Bảo lưu dữ liệu khách đã chọn/ghi chú
+          const oldMap = new Map();
+          photos.forEach((p) => {
+            if (p.link_id) oldMap.set(p.link_id, p);
+            if (p.filename) oldMap.set(p.filename, p);
+          });
 
-      if (parsedPhotos.length > 0) {
-        photos = parsedPhotos;
-      } else if (folderId) {
-        photos = generatePhotosForFolder(folderId);
+          photos = scannedPhotos.map((np) => {
+            const old = oldMap.get(np.link_id) || oldMap.get(np.filename);
+            return old ? {
+              ...np,
+              selected: old.selected || false,
+              tim: old.tim || false,
+              in_anh: old.in_anh || false,
+              size_anh: old.size_anh || '',
+              note: old.note || ''
+            } : np;
+          });
+        } else {
+          // Fallback nếu chưa cấu hình Apps Script hoặc link đơn lẻ
+          const folderId = DriveParser.extractFolderId(linkDrive);
+          const parsedPhotos = DriveParser.parseMultipleLinks(linkDrive);
+
+          if (parsedPhotos.length > 0) {
+            photos = parsedPhotos;
+          } else if (folderId && photos.length === 0) {
+            photos = generatePhotosForFolder(folderId);
+          }
+        }
+      } catch (err) {
+        console.warn('Lỗi khi quét thư mục Drive:', err);
       }
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
     }
 
     const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
@@ -601,7 +757,73 @@ const App = (function () {
     saveAlbum(albumData);
     closeCreateModal();
     renderDashboard();
-    showToast(editId ? `Đã cập nhật album [Mã: ${code}] thành công!` : `Đã tạo album mới [Mã: ${code}] thành công!`, 'success');
+
+    // Nếu đang ở màn hình chi tiết album thì cập nhật lại giao diện
+    if (currentAlbumId === albumData.id || window.location.hash.includes(code)) {
+      openAlbumView(code);
+    }
+
+    const countNotice = photos.length > 0 ? ` (Đã tải ${photos.length} ảnh)` : '';
+    showToast(editId ? `Đã cập nhật album [Mã: ${code}]${countNotice} thành công!` : `Đã tạo album mới [Mã: ${code}]${countNotice} thành công!`, 'success');
+  }
+
+  /**
+   * Quét lại toàn bộ ảnh từ Google Drive cho Album hiện tại
+   */
+  async function rescanCurrentAlbumPhotos(albumId) {
+    const targetId = albumId || currentAlbumId;
+    const album = albums.find((a) => a.id === targetId);
+    if (!album) return;
+
+    if (!album.link_drive) {
+      alert('Album này chưa có link Google Drive để quét!');
+      return;
+    }
+
+    showToast('Đang quét lại toàn bộ ảnh từ Google Drive...', 'info');
+
+    const scannedPhotos = await DriveParser.scanDriveFolder(album.link_drive);
+    if (scannedPhotos && scannedPhotos.length > 0) {
+      const oldMap = new Map();
+      (album.photos || []).forEach((p) => {
+        if (p.link_id) oldMap.set(p.link_id, p);
+        if (p.filename) oldMap.set(p.filename, p);
+      });
+
+      const mergedPhotos = scannedPhotos.map((np) => {
+        const old = oldMap.get(np.link_id) || oldMap.get(np.filename);
+        if (old) {
+          return {
+            ...np,
+            selected: old.selected || false,
+            tim: old.tim || false,
+            in_anh: old.in_anh || false,
+            size_anh: old.size_anh || '',
+            note: old.note || '',
+          };
+        }
+        return np;
+      });
+
+      album.photos = mergedPhotos;
+      if (!album.cover_id && mergedPhotos.length > 0) {
+        album.cover_id = mergedPhotos[0].link_id;
+      }
+
+      saveAlbum(album);
+      if (window.Gallery && typeof window.Gallery.init === 'function') {
+        window.Gallery.init(album);
+      }
+      renderDashboard();
+      showToast(`✓ Đã cập nhật thành công ${mergedPhotos.length} ảnh từ Google Drive!`, 'success');
+    } else {
+      alert(
+        `Không thể quét tự động ảnh từ thư mục Google Drive.\n\n` +
+        `💡 Hướng dẫn xử lý:\n` +
+        `1. Hãy chắc chắn Thư mục Google Drive đã bật chế độ "Bất kỳ ai có đường liên kết đều xem được".\n` +
+        `2. Cập nhật mã nguồn Google Apps Script trong mục "Cài đặt đồng bộ" để kích hoạt hàm scanFolder.`
+      );
+    }
   }
 
   function generatePhotosForFolder(folderId) {
@@ -687,8 +909,12 @@ const App = (function () {
   function openSettingsModal() {
     const modal = document.getElementById('sheetsSettingsModal');
     const input = document.getElementById('inputAppsScriptUrl');
+    const templateTxt = document.getElementById('txtAppsScriptTemplate');
     if (input && typeof SheetsSync !== 'undefined') {
       input.value = SheetsSync.getScriptUrl();
+    }
+    if (templateTxt && typeof SheetsSync !== 'undefined') {
+      templateTxt.value = SheetsSync.getAppsScriptCodeTemplate();
     }
     if (modal) modal.classList.add('open');
   }
@@ -763,6 +989,8 @@ const App = (function () {
     searchAndOpenAlbum,
     saveAlbum,
     deleteAlbum,
+    deleteCurrentAlbum,
+    rescanCurrentAlbumPhotos,
     openCreateModal,
     openEditModal,
     closeCreateModal,

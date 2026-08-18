@@ -104,6 +104,9 @@ const Gallery = (function () {
       return;
     }
 
+    const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
+    const isOwner = user && (currentAlbum.owner_uid === user.uid || (user.email && currentAlbum.owner_email === user.email) || (user.uid && user.uid.startsWith('demo_')));
+
     filteredPhotos.forEach((photo) => {
       const globalIndex = currentAlbum.photos.indexOf(photo);
       const itemDiv = document.createElement('div');
@@ -112,6 +115,12 @@ const Gallery = (function () {
 
       const thumbUrl = DriveParser.getCdnUrl(photo.link_id, 600);
       const fallbackUrl = DriveParser.getFallbackUrl(photo.link_id, 600);
+
+      const ownerDeleteBtn = (isOwner || (user && user.uid)) ? `
+        <button class="p-action-btn text-danger" onclick="Gallery.deletePhoto('${photo.id_photo}')" title="Xóa ảnh này khỏi Album">
+          <i class="bi bi-trash"></i>
+        </button>
+      ` : '';
 
       itemDiv.innerHTML = `
         <div class="photo-card-item">
@@ -158,6 +167,7 @@ const Gallery = (function () {
               onclick="Gallery.openNoteModalById('${photo.id_photo}')" title="Ghi chú chỉnh sửa">
               <i class="bi bi-chat-left-dots"></i>
             </button>
+            ${ownerDeleteBtn}
           </div>
 
           <!-- Cover Badge -->
@@ -446,6 +456,49 @@ const Gallery = (function () {
     if (modal) modal.classList.add('open');
   }
 
+  function deletePhoto(photoId) {
+    if (!currentAlbum || !photoId) return;
+    const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
+    if (!user) {
+      alert('Tính năng xóa ảnh chỉ dành cho chủ Studio quản trị.');
+      return;
+    }
+    if (confirm('Bạn có chắc chắn muốn xóa ảnh này khỏi Album không?')) {
+      currentAlbum.photos = currentAlbum.photos.filter((p) => p.id_photo !== photoId);
+      if (currentAlbum.cover_id && !currentAlbum.photos.some((p) => p.link_id === currentAlbum.cover_id)) {
+        currentAlbum.cover_id = currentAlbum.photos.length > 0 ? currentAlbum.photos[0].link_id : '';
+      }
+      window.App?.saveAlbum(currentAlbum);
+      updateFilterCounts();
+      renderGalleryGrid();
+      window.App?.showToast('Đã xóa ảnh khỏi Album!', 'info');
+    }
+  }
+
+  function deleteSelectedPhotos() {
+    if (!currentAlbum) return;
+    const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
+    if (!user) {
+      alert('Tính năng xóa ảnh chỉ dành cho chủ Studio quản trị.');
+      return;
+    }
+    const selectedPhotos = currentAlbum.photos.filter((p) => p.selected);
+    if (selectedPhotos.length === 0) {
+      alert('Chưa có ảnh nào được chọn (tích ✓) để xóa!');
+      return;
+    }
+    if (confirm(`Bạn có chắc muốn xóa ${selectedPhotos.length} ảnh đã chọn khỏi Album này không?`)) {
+      currentAlbum.photos = currentAlbum.photos.filter((p) => !p.selected);
+      if (currentAlbum.cover_id && !currentAlbum.photos.some((p) => p.link_id === currentAlbum.cover_id)) {
+        currentAlbum.cover_id = currentAlbum.photos.length > 0 ? currentAlbum.photos[0].link_id : '';
+      }
+      window.App?.saveAlbum(currentAlbum);
+      updateFilterCounts();
+      renderGalleryGrid();
+      window.App?.showToast(`Đã xóa ${selectedPhotos.length} ảnh khỏi Album!`, 'info');
+    }
+  }
+
   return {
     init,
     getCurrentAlbum: () => currentAlbum,
@@ -461,6 +514,8 @@ const Gallery = (function () {
     updatePhotoState,
     resetSelections,
     exportFilenames,
+    deletePhoto,
+    deleteSelectedPhotos,
   };
 })();
 
