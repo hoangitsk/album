@@ -1,13 +1,14 @@
 /**
  * Google Drive URL Parser & Image Resolver
- * Hỗ trợ trích xuất Folder ID, File ID, tạo link CDN chất lượng cao và fallback
+ * Hỗ trợ trích xuất Folder ID, File ID, tạo link CDN chất lượng cao và fallback đa tầng
+ * Chuẩn luồng hoạt động tối ưu tốc độ và chống chặn CORS
  */
 
 const DriveParser = (function () {
   // Regex pattern cho Google Drive link
   const PATTERNS = {
-    folder: /(?:folders\/|id=)([a-zA-Z0-9_-]{25,})/,
-    file: /(?:file\/d\/|id=|\/d\/)([a-zA-Z0-9_-]{25,})/,
+    folder: /(?:folders\/|id=|open\?id=|\/folders\/)([a-zA-Z0-9_-]{25,})/,
+    file: /(?:file\/d\/|id=|\/d\/|open\?id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/,
   };
 
   /**
@@ -37,50 +38,83 @@ const DriveParser = (function () {
   }
 
   /**
-   * Tạo link CDN Google chất lượng cao
+   * Lớp 1: Link Google CDN trực tiếp (Tốc độ cao nhất)
    * @param {string} fileId
-   * @param {number|string} width - 'w600', 'w1200', 'w1920', 'w4000'
+   * @param {number|string} width - 601 (grid), 1920 (lightbox), 4000 (cover)
    */
-  function getCdnUrl(fileId, width = 1200) {
+  function getCdnUrl(fileId, width = 601) {
     if (!fileId) return '';
     const sizeParam = typeof width === 'number' ? `w${width}` : width;
     return `https://lh3.googleusercontent.com/d/${fileId}=${sizeParam}`;
   }
 
   /**
-   * Link dự phòng (Fallback qua Weserv Proxy hoặc Google uc)
+   * Lớp 2: Link dự phòng qua Weserv Proxy (Drive Thumbnail)
    */
-  function getFallbackUrl(fileId, width = 1000) {
+  function getFallbackUrl(fileId, width = 601) {
     if (!fileId) return '';
     const rawGg = `https://drive.google.com/thumbnail?id=${fileId}&sz=w${width}`;
     return `https://images.weserv.nl/?url=${encodeURIComponent(rawGg)}`;
   }
 
   /**
+   * Lớp 2 phụ: Link dự phòng qua Weserv Proxy (Google CDN)
+   */
+  function getWeservCdnUrl(fileId, width = 601) {
+    if (!fileId) return '';
+    const directCdn = `https://lh3.googleusercontent.com/d/${fileId}=w${width}`;
+    return `https://images.weserv.nl/?url=${encodeURIComponent(directCdn)}`;
+  }
+
+  /**
    * Link tải trực tiếp từ Google Drive
    */
   function getDirectDownloadUrl(fileId) {
+    if (!fileId) return '';
+    return `https://drive.usercontent.google.com/u/0/uc?id=${fileId}&export=download`;
+  }
+
+  /**
+   * Link tải fallback từ Google Drive
+   */
+  function getDriveDownloadUrl(fileId) {
+    if (!fileId) return '';
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
 
   /**
-   * Phân tích nội dung textarea / input nhiều link Drive
+   * Link mở thư mục Drive
+   */
+  function getFolderUrl(folderIdOrLink) {
+    if (!folderIdOrLink) return 'https://drive.google.com';
+    const folderId = extractFolderId(folderIdOrLink);
+    return folderId ? `https://drive.google.com/drive/folders/${folderId}` : folderIdOrLink;
+  }
+
+  /**
+   * Phân tích nội dung textarea / input nhiều link Drive hoặc danh sách file
    */
   function parseMultipleLinks(rawText) {
     if (!rawText) return [];
-    const lines = rawText.split(/[\n,;]+/);
+    const lines = rawText.split(/[\r\n,;]+/);
     const photos = [];
     let count = 1;
 
     lines.forEach((line) => {
       const trimmed = line.trim();
       if (!trimmed) return;
+      
+      // Kiểm tra xem có định dạng "Tên_file.jpg https://drive.google.com/..." hoặc "Tên_file.jpg, FileID"
       const fileId = extractFileId(trimmed);
       if (fileId) {
+        // Tìm filename nếu có trong dòng
+        const nameMatch = trimmed.match(/([a-zA-Z0-9_\-\s]+\.(?:jpe?g|png|webp|heic|cr2|cr3|nef|arw|dng|raf|tif|tiff))/i);
+        const filename = nameMatch ? nameMatch[1].trim() : `IMG_${String(count).padStart(4, '0')}.JPG`;
+
         photos.push({
           id_photo: 'p_' + Math.random().toString(36).substr(2, 9),
           link_id: fileId,
-          filename: `IMG_${String(count).padStart(4, '0')}.JPG`,
+          filename: filename,
           selected: false,
           tim: false,
           in_anh: false,
@@ -101,7 +135,7 @@ const DriveParser = (function () {
 
     // Nếu dán danh sách nhiều file / link ảnh trực tiếp
     const directPhotos = parseMultipleLinks(input);
-    if (directPhotos.length > 0 && directPhotos.length > 1) {
+    if (directPhotos.length > 1) {
       return directPhotos;
     }
 
@@ -127,7 +161,10 @@ const DriveParser = (function () {
     extractFileId,
     getCdnUrl,
     getFallbackUrl,
+    getWeservCdnUrl,
     getDirectDownloadUrl,
+    getDriveDownloadUrl,
+    getFolderUrl,
     parseMultipleLinks,
     scanDriveFolder,
   };

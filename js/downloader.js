@@ -127,12 +127,16 @@ const AlbumDownloader = (function () {
 
     async function fetchSinglePhoto(photo, index) {
       const filename = photo.filename || `IMG_${String(index + 1).padStart(4, '0')}.JPG`;
-      const directUrl = DriveParser.getCdnUrl(photo.link_id, 1920);
-      const fallbackUrl = DriveParser.getFallbackUrl(photo.link_id, 1600);
+      const fallbackUrl1 = DriveParser.getFallbackUrl(photo.link_id, 2400);
+      const fallbackUrl2 = DriveParser.getWeservCdnUrl(photo.link_id, 2400);
+      const directCdn = DriveParser.getCdnUrl(photo.link_id, 1920);
+      const directDownload = DriveParser.getDirectDownloadUrl(photo.link_id);
 
       const urlsToTry = [
-        directUrl,
-        fallbackUrl,
+        fallbackUrl1,
+        fallbackUrl2,
+        directCdn,
+        directDownload,
         `https://drive.google.com/uc?export=download&id=${photo.link_id}`
       ];
 
@@ -148,7 +152,7 @@ const AlbumDownloader = (function () {
             console.error(`Không thể tải ảnh ${filename}:`, e);
             return null;
           }
-          await new Promise((r) => setTimeout(r, 500));
+          await new Promise((r) => setTimeout(r, 300));
         }
       }
       return null;

@@ -8,6 +8,12 @@ const Gallery = (function () {
   let masonryInstance = null;
   let sharedWatermarkUrl = null;
   let debouncedLayoutTimer = null;
+  
+  // Pagination State
+  let currentPage = 0;
+  const itemsPerPage = 30;
+  let currentFilteredPhotos = [];
+  let infiniteScrollObserver = null;
 
   function init(album) {
     currentAlbum = album;
@@ -16,7 +22,7 @@ const Gallery = (function () {
 
     generateSharedWatermark();
     renderHeroBanner();
-    renderGalleryGrid();
+    renderGalleryGrid(true);
     updateFilterCounts();
   }
 
@@ -68,53 +74,87 @@ const Gallery = (function () {
       const coverPhoto = currentAlbum.photos.find((p) => p.link_id === currentAlbum.cover_id) || currentAlbum.photos[0];
       if (coverPhoto) {
         const coverUrl = DriveParser.getCdnUrl(coverPhoto.link_id, 4000);
-        coverEl.style.backgroundImage = `url('${coverUrl}')`;
+        const fallbackCover = DriveParser.getFallbackUrl(coverPhoto.link_id, 1600);
+        const fallbackCover2 = DriveParser.getWeservCdnUrl(coverPhoto.link_id, 1600);
+
+        const img = new Image();
+        img.onload = function () {
+          coverEl.style.backgroundImage = `url('${coverUrl}')`;
+        };
+        img.onerror = function () {
+          const img2 = new Image();
+          img2.onload = function () {
+            coverEl.style.backgroundImage = `url('${fallbackCover}')`;
+          };
+          img2.onerror = function () {
+            coverEl.style.backgroundImage = `url('${fallbackCover2}')`;
+          };
+          img2.src = fallbackCover;
+        };
+        img.src = coverUrl;
       }
     }
   }
 
-  function renderGalleryGrid() {
+  function renderGalleryGrid(reset = true) {
     const grid = document.getElementById('masonryGridWrap');
     if (!grid) return;
 
-    grid.innerHTML = '<div class="grid-sizer"></div>';
+    if (reset) {
+      grid.innerHTML = '<div class="grid-sizer"></div>';
+      currentPage = 0;
 
-    // Lọc theo filter hiện tại
-    let filteredPhotos = currentAlbum.photos;
-    if (currentFilter === 'selected') {
-      filteredPhotos = currentAlbum.photos.filter((p) => p.selected);
-    } else if (currentFilter === 'favorite') {
-      filteredPhotos = currentAlbum.photos.filter((p) => p.tim);
-    } else if (currentFilter === 'print') {
-      filteredPhotos = currentAlbum.photos.filter((p) => p.in_anh);
-    } else if (currentFilter === 'note') {
-      filteredPhotos = currentAlbum.photos.filter((p) => p.note && p.note.trim().length > 0);
-    }
+      // Lọc theo filter hiện tại
+      currentFilteredPhotos = currentAlbum.photos;
+      if (currentFilter === 'selected') {
+        currentFilteredPhotos = currentAlbum.photos.filter((p) => p.selected);
+      } else if (currentFilter === 'favorite') {
+        currentFilteredPhotos = currentAlbum.photos.filter((p) => p.tim);
+      } else if (currentFilter === 'print') {
+        currentFilteredPhotos = currentAlbum.photos.filter((p) => p.in_anh);
+      } else if (currentFilter === 'note') {
+        currentFilteredPhotos = currentAlbum.photos.filter((p) => p.note && p.note.trim().length > 0);
+      }
 
-    if (filteredPhotos.length === 0) {
-      const emptyDiv = document.createElement('div');
-      emptyDiv.className = 'empty-state-box';
-      emptyDiv.innerHTML = `
-        <i class="bi bi-images empty-state-icon"></i>
-        <h3>Không có ảnh nào trong mục này</h3>
-        <p class="text-muted">Hãy chọn các ảnh khác hoặc quay lại bộ lọc Tất cả.</p>
-        <button class="btn-modern btn-primary-glow mt-3" onclick="Gallery.setFilter('all')">Xem tất cả ảnh</button>
-      `;
-      grid.appendChild(emptyDiv);
-      return;
-    }
+      if (currentFilteredPhotos.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-state-box';
+        emptyDiv.innerHTML = `
+          <i class="bi bi-images empty-state-icon"></i>
+          <h3>Không có ảnh nào trong mục này</h3>
+          <p class="text-muted">Hãy chọn các ảnh khác hoặc quay lại bộ lọc Tất cả.</p>
+          <button class="btn-modern btn-primary-glow mt-3" onclick="Gallery.setFilter('all')">Xem tất cả ảnh</button>
+        `;
+        grid.appendChild(emptyDiv);
+        destroyInfiniteScroll();
+        return;
+      }
+      
+      rebuildMasonry(); // Khởi tạo Masonry rỗng trước
+      setupInfiniteScroll();
+    } // end reset
+
+    // Tính toán mảng cần render
+    const startIdx = currentPage * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    const photosToRender = currentFilteredPhotos.slice(startIdx, endIdx);
+
+    if (photosToRender.length === 0) return;
 
     const user = typeof Auth !== 'undefined' ? Auth.getCurrentUser() : null;
     const isOwner = user && (currentAlbum.owner_uid === user.uid || (user.email && currentAlbum.owner_email === user.email) || (user.uid && user.uid.startsWith('demo_')));
 
-    filteredPhotos.forEach((photo) => {
+    const newElements = [];
+
+    photosToRender.forEach((photo) => {
       const globalIndex = currentAlbum.photos.indexOf(photo);
       const itemDiv = document.createElement('div');
       itemDiv.className = 'grid-item';
       itemDiv.id = `gridItem_${photo.id_photo}`;
 
-      const thumbUrl = DriveParser.getCdnUrl(photo.link_id, 600);
-      const fallbackUrl = DriveParser.getFallbackUrl(photo.link_id, 600);
+      const thumbUrl = DriveParser.getCdnUrl(photo.link_id, 601);
+      const fallbackUrl1 = DriveParser.getFallbackUrl(photo.link_id, 601);
+      const fallbackUrl2 = DriveParser.getWeservCdnUrl(photo.link_id, 601);
 
       const ownerDeleteBtn = (isOwner || (user && user.uid)) ? `
         <button class="p-action-btn text-danger" onclick="Gallery.deletePhoto('${photo.id_photo}')" title="Xóa ảnh này khỏi Album">
@@ -130,12 +170,20 @@ const Gallery = (function () {
               src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3C/svg%3E" 
               alt="${photo.filename || 'Photo'}" 
               class="gallery-photo-img lazy-img"
+              onload="this.classList.add('loaded'); Gallery.debouncedLayout();"
               onerror="
                 this.classList.add('loaded');
                 if(!this._attempt1) {
                   this._attempt1 = true;
-                  this.src = '${fallbackUrl}';
+                  this.src = '${fallbackUrl1}';
+                } else if(!this._attempt2) {
+                  this._attempt2 = true;
+                  this.src = '${fallbackUrl2}';
+                } else if(!this._attempt3) {
+                  this._attempt3 = true;
+                  this.src = 'https://drive.google.com/thumbnail?id=${photo.link_id}&sz=w601';
                 }
+                Gallery.debouncedLayout();
               "
             />
             ${sharedWatermarkUrl ? `<div class="wm-canvas-layer" style="background-image:url(${sharedWatermarkUrl});background-size:cover;background-position:center;"></div>` : ''}
@@ -182,14 +230,79 @@ const Gallery = (function () {
       `;
 
       grid.appendChild(itemDiv);
+      newElements.push(itemDiv);
     });
 
-    initLazyLoading();
-    rebuildMasonry();
+    initLazyLoading(newElements);
+    
+    if (masonryInstance && !reset) {
+      masonryInstance.appended(newElements);
+      if (typeof imagesLoaded !== 'undefined') {
+        imagesLoaded(grid).on('progress', () => {
+          if (masonryInstance) masonryInstance.layout();
+        });
+      }
+    }
+    
+    // Ẩn sentinel nếu đã hết ảnh, nếu không thì đưa xuống cuối cùng
+    const sentinel = document.getElementById('loadMoreSentinel');
+    if (sentinel) {
+      if (endIdx >= currentFilteredPhotos.length) {
+        sentinel.style.display = 'none';
+      } else {
+        sentinel.style.display = 'block';
+        grid.appendChild(sentinel); 
+      }
+    }
   }
 
-  function initLazyLoading() {
-    const lazyImages = document.querySelectorAll('.gallery-photo-img.lazy-img:not([data-loaded])');
+  function setupInfiniteScroll() {
+    destroyInfiniteScroll();
+    
+    const grid = document.getElementById('masonryGridWrap');
+    if (!grid) return;
+
+    const sentinel = document.createElement('div');
+    sentinel.id = 'loadMoreSentinel';
+    sentinel.innerHTML = '<div class="spinner-border text-primary" role="status" style="margin: 20px auto;"></div>';
+    sentinel.style.width = '100%';
+    sentinel.style.textAlign = 'center';
+    sentinel.style.display = 'none';
+    grid.appendChild(sentinel);
+
+    if ('IntersectionObserver' in window) {
+      infiniteScrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            currentPage++;
+            renderGalleryGrid(false);
+          }
+        });
+      }, { rootMargin: '400px' });
+      infiniteScrollObserver.observe(sentinel);
+    }
+  }
+
+  function destroyInfiniteScroll() {
+    if (infiniteScrollObserver) {
+      infiniteScrollObserver.disconnect();
+      infiniteScrollObserver = null;
+    }
+    const sentinel = document.getElementById('loadMoreSentinel');
+    if (sentinel) sentinel.remove();
+  }
+
+  function initLazyLoading(elements = []) {
+    let lazyImages;
+    if (elements && elements.length > 0) {
+      lazyImages = [];
+      elements.forEach(el => {
+        const imgs = el.querySelectorAll('.gallery-photo-img.lazy-img:not([data-loaded])');
+        imgs.forEach(img => lazyImages.push(img));
+      });
+    } else {
+      lazyImages = document.querySelectorAll('.gallery-photo-img.lazy-img:not([data-loaded])');
+    }
 
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries, obs) => {

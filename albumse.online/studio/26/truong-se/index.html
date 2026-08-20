@@ -1,0 +1,1702 @@
+<!doctype html><html lang="vi"><head>
+    <meta charset="UTF-8">
+    <title>SE MEDIA</title>
+    <meta property="og:image" content="https://albumse.online/src/cover/26.jpg?v=1787062852">
+    <meta property="og:description" content="Trường SE nơi lưu giữ thanh xuân - Admin albumse.online">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="../../../src/album_se_logo.png">
+    <link href="../../../_ext/fonts.googleapis.com/css2/index_44mpau.html" rel="stylesheet">
+    <link href="../../../_ext/cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_ext/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        /* Cover + Avatar Facebook style */
+        .profile-cover-wrap {
+            position: relative;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px 0 rgba(60, 64, 67, .08);
+        }
+
+        .profile-cover-img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            object-fit: cover;
+            background: #fff;
+            box-shadow: 0 3px 16px rgba(0, 0, 0, .13);
+        }
+
+        .profile-info-g {
+            /* padding: 70px 32px 24px 160px;
+            position: relative;
+            min-height: 110px; */
+        }
+
+        .profile-info-g h2 {
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #1a73e8;
+            font-size: 2rem;
+        }
+
+        .profile-info-g .text-muted {
+            font-size: 16px;
+        }
+
+        .profile-info-g .socials-g {
+            margin-top: 10px;
+        }
+
+        .profile-info-g .socials-g a {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        /* Fixed stats flex */
+        .profile-quick-stats-flex {
+            display: flex;
+            /* flex-wrap: nowrap; */
+            justify-content: space-between;
+            gap: 0;
+            margin-bottom: 2px;
+            margin-top: 24px;
+        }
+
+        .profile-quick-stats-flex .stat-g {
+            min-width: 0;
+            width: 32%;
+            margin-bottom: 0;
+            background: #f7fafd;
+            border-radius: 8px;
+            padding: 1.1rem 1rem 1.1rem 1rem;
+            text-align: center;
+        }
+
+        .profile-quick-stats-flex .stat-label {
+            margin-top: 0.33rem;
+            color: #757575;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .profile-quick-stats-flex .stat-value {
+            font-size: 2.1rem;
+            font-weight: 500;
+            color: #1a73e8;
+        }
+
+        .stat-goi {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #1e7e34;
+            margin-top: 10px;
+            margin-bottom: 0;
+            width: 100%;
+            background: #e7f5ea;
+            border-radius: 8px;
+            text-align: center;
+            padding: 0.9rem;
+        }
+
+        .progress-g {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 7px;
+        }
+
+        .progress-g .progress-bar-g {
+            background-color: #1a73e8;
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .tabs-g {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px 0 rgba(60, 64, 67, .08);
+        }
+
+        .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 2px solid #1a73e8;
+            color: #1a73e8;
+            font-weight: 500;
+            background: #f7fafd;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Album masonry / xếp gạch grid */
+        .album-masonry-grid {
+            column-count: 3;
+            column-gap: 1rem;
+        }
+
+        @media (max-width: 991px) {
+            .album-masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .album-masonry-grid {
+                column-count: 1;
+            }
+        }
+
+        .album-masonry-item {
+            display: inline-block;
+            width: 100%;
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+
+        .album-google-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px 0 rgba(60, 64, 67, .10);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow .18s;
+        }
+
+        .album-google-card:hover {
+            box-shadow: 0 4px 18px 0 rgba(60, 64, 67, .19);
+        }
+
+        .album-thumb-g-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 200px;
+            background: #e9ecef;
+            overflow: hidden;
+        }
+
+        .album-thumb-g-wrap::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shimmer 1.5s infinite;
+            z-index: 1;
+        }
+
+        .album-thumb-g-wrap.is-loaded::before {
+            display: none;
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        .album-thumb-g {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            background: #f1f3f4;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .album-thumb-g.loaded {
+            opacity: 1;
+        }
+
+        .album-thumb-g-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            border-radius: 0;
+        }
+
+        .lds-dual-ring {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+        }
+
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 38px;
+            height: 38px;
+            margin: 5px;
+            border-radius: 50%;
+            border: 4px solid #1a73e8;
+            border-color: #1a73e8 transparent #1a73e8 transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+
+        @keyframes lds-dual-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .album-body-g {
+            padding: 1.1rem 1.3rem 1rem 1.3rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+        }
+
+        .album-title-g {
+            font-weight: 500;
+            color: #202124;
+            font-size: 1.13rem;
+            margin-bottom: 5px;
+            /* Multi-line ellipsis 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.5em;
+            line-height: 1.22em;
+            max-height: 2.5em;
+        }
+
+        .album-meta-g {
+            color: #757575;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .album-info-icons {
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .album-info-icons span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .album-actions-g {
+            margin-top: auto;
+            display: flex;
+            gap: 0.7rem;
+        }
+
+        .btn-g {
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            /* .profile-info-g {
+                padding-left: 150px;
+            } */
+
+            .profile-quick-stats-flex {
+                flex-wrap: wrap;
+            }
+
+            .profile-quick-stats-flex .stat-g {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 767px) {
+
+            .col-1,
+            .col-2 {
+                width: 50% !important;
+            }
+
+            .col-3 {
+                width: 100% !important;
+            }
+
+            .profile-cover-img {
+                height: 120px;
+            }
+
+            .profile-avatar {
+                width: 110px;
+                height: 110x;
+                /* left: 20px;
+                bottom: 200x; */
+                border-width: 3px;
+            }
+
+            /* .profile-info-g {
+                padding: 50px 12px 16px 100px;
+                min-height: 75px;
+            } */
+
+            .profile-info-g h2 {
+                font-size: 1.3rem;
+                padding-right: 15px;
+            }
+
+            .profile-info-g .text-muted {
+                font-size: 14px;
+            }
+
+            .stat-goi {
+                font-size: 1rem;
+            }
+
+            .font-wrap {
+                width: 185px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .album-google-card {
+                border-radius: 10px;
+            }
+
+            .tabs-g {
+                border-radius: 10px;
+            }
+
+            .profile-cover-wrap {
+                border-radius: 8px;
+            }
+
+            .profile-cover-img {
+                border-radius: 8px 8px 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-4">
+        <div class="profile-cover-wrap">
+            <img src="../../../src/cover/26_1isal7p.jpg" class="profile-cover-img" alt="Cover">
+            <div style="display: flex;padding:20px;gap:20px">
+                <div style="display: flex;justify-content: center;width:110px;flex-wrap:wrap">
+                    <img src="../../../src/avatar/26_1isal7p.jpg" class="profile-avatar" alt="Avatar">
+                </div>
+                <div class="profile-info-g font-wrap">
+                    <h2>SE MEDIA</h2>
+                    <div class="text-muted" style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal; ">
+                        <i class="fa fa-phone"></i> 0344449794&nbsp;|&nbsp;
+                        <i class="fa fa-envelope"></i> nhattruongvn321@gmail.com                    </div>
+                    <div class="socials-g">
+                                                    <a href="https://www.facebook.com/truong.se901/" target="_blank" class="text-primary"><i class="fab fa-facebook fa-lg"></i></a>
+                                                                            <a href="https://www.instagram.com/nhattruong1010/" target="_blank" class="text-danger"><i class="fab fa-instagram fa-lg"></i></a>
+                                            </div>
+                                            <div class="mt-2 text-secondary" style="font-size:15px;">Trường SE nơi lưu giữ thanh xuân - Admin albumse.online                        </div>
+                                    </div>
+            </div>
+        </div>
+
+        <!-- Tên gói nằm dưới cùng, chiếm full width -->
+
+        <div class="tabs-g mt-3">
+            <ul class="nav nav-tabs" id="mainTab" role="tablist">
+                <li class="nav-item" role="presentation"><button class="nav-link active" id="albums-tab" data-bs-toggle="tab" data-bs-target="#albums" type="button" role="tab">Album</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="videos-tab" data-bs-toggle="tab" data-bs-target="#videos" type="button" role="tab">Video</button></li>
+            </ul>
+            <div class="tab-content px-2 py-4" id="mainTabContent">
+                <!-- Albums Tab -->
+                <div class="tab-pane fade show active" id="albums" role="tabpanel">
+                    <div class="album-masonry-grid">
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Uex8LsSW/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Uex8LsSW" src="../../../_ext/lh3.googleusercontent.com/d/17ouO9ZuAUpEc4fEGIzpK4BKgpKFRTx6b=w800/index.html" alt="cover" data-linkid="17ouO9ZuAUpEc4fEGIzpK4BKgpKFRTx6b" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Uex8LsSW" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tiệc 28-07-2026">
+                                            Tiệc 28-07-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/OH6O965Z/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-OH6O965Z" src="../../../_ext/lh3.googleusercontent.com/d/1NNovT6z1KDZZ6akFhc2GNzjwjnGVJl9U=w800/index.html" alt="cover" data-linkid="1NNovT6z1KDZZ6akFhc2GNzjwjnGVJl9U" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-OH6O965Z" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Cưới Truyền Thống Thảo &amp; Hiếu 24-07-2026">
+                                            Ảnh Cưới Truyền Thống Thảo &amp; Hiếu 24-07-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/D962KdkM/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-D962KdkM" src="../../../_ext/lh3.googleusercontent.com/d/1J7I4q__8HSlAnn6SM_f73EC0iiZb4ykM=w800/index.html" alt="cover" data-linkid="1J7I4q__8HSlAnn6SM_f73EC0iiZb4ykM" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-D962KdkM" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt Nghiệp AKha 14-07-2026">
+                                            Tốt Nghiệp AKha 14-07-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/PcUH7Wlw/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-PcUH7Wlw" src="../../../_ext/lh3.googleusercontent.com/d/1RhIzmyr2niyFHiGQ2GpcNeebbKK2qNkV=w800/index.html" alt="cover" data-linkid="1RhIzmyr2niyFHiGQ2GpcNeebbKK2qNkV" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-PcUH7Wlw" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt nghiệp Văn Nam 13-07-2026">
+                                            Tốt nghiệp Văn Nam 13-07-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/mcCT8rzE/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-mcCT8rzE" src="../../../_ext/lh3.googleusercontent.com/d/1fdgj_A11wnFMCGcvVSWZp3dAlep3lwJX=w800/index.html" alt="cover" data-linkid="1fdgj_A11wnFMCGcvVSWZp3dAlep3lwJX" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-mcCT8rzE" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Cưới Truyền Thống Thảo &amp; Hoàng 28-06-2026">
+                                            Ảnh Cưới Truyền Thống Thảo &amp; Hoàng 28-06-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/XerBqTN5/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-XerBqTN5" src="../../../_ext/lh3.googleusercontent.com/d/1E-QAlrWATMN6WaEw-V2SQa0qgsif9yBH=w800/index.html" alt="cover" data-linkid="1E-QAlrWATMN6WaEw-V2SQa0qgsif9yBH" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-XerBqTN5" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Lễ Đính Hôn - Lâm Viên &amp; Trần Tiến">
+                                            Lễ Đính Hôn - Lâm Viên &amp; Trần Tiến                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/UKL2W1AH/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-UKL2W1AH" src="../../../_ext/lh3.googleusercontent.com/d/14ZdV2b_BDYxirJTdtiUZ83MFQ0ql-G2o=w800/index.html" alt="cover" data-linkid="14ZdV2b_BDYxirJTdtiUZ83MFQ0ql-G2o" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-UKL2W1AH" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Nhà Thờ Mỹ Thanh 07-06-2026">
+                                            Nhà Thờ Mỹ Thanh 07-06-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/VPMgssxT/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-VPMgssxT" src="../../../_ext/lh3.googleusercontent.com/d/10AHoc_vej0BcqYuHTcovenEs6ORLKA4D=w800/index.html" alt="cover" data-linkid="10AHoc_vej0BcqYuHTcovenEs6ORLKA4D" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-VPMgssxT" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Tốt Nghiệp Lớp 9.3 - THCS Nguyễn Khuyến">
+                                            Ảnh Tốt Nghiệp Lớp 9.3 - THCS Nguyễn Khuyến                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/BI7DhxrT/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-BI7DhxrT" src="../../../_ext/lh3.googleusercontent.com/d/1l6-EpPxC7T69YS1379FUU217pHuQFWGc=w800/index.html" alt="cover" data-linkid="1l6-EpPxC7T69YS1379FUU217pHuQFWGc" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-BI7DhxrT" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Tốt Nghiệp Lớp 9.2 - THCS Nguyễn Khuyến">
+                                            Ảnh Tốt Nghiệp Lớp 9.2 - THCS Nguyễn Khuyến                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/VzaQQuri/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-VzaQQuri" src="../../../_ext/lh3.googleusercontent.com/d/1-6aFNIUcW7Z3idYxw1bgMvtNab8irwO2=w800/index.html" alt="cover" data-linkid="1-6aFNIUcW7Z3idYxw1bgMvtNab8irwO2" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-VzaQQuri" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Tốt Nghiệp Lớp 9.1 - THCS Nguyễn Khuyến">
+                                            Ảnh Tốt Nghiệp Lớp 9.1 - THCS Nguyễn Khuyến                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/t0GHXfhH/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-t0GHXfhH" src="../../../_ext/lh3.googleusercontent.com/d/1b_1HgOlIOFvc6jVGIriuHyqPwSQ8_y0n=w800/index.html" alt="cover" data-linkid="1b_1HgOlIOFvc6jVGIriuHyqPwSQ8_y0n" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-t0GHXfhH" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Trân &amp; Bảo - Ảnh Phóng Sự">
+                                            Trân &amp; Bảo - Ảnh Phóng Sự                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/0UAOhTFw/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-0UAOhTFw" src="../../../_ext/lh3.googleusercontent.com/d/1iK2pWMM0Qt3EbqfQqegYkQ7e0r_Q7mP6=w800/index.html" alt="cover" data-linkid="1iK2pWMM0Qt3EbqfQqegYkQ7e0r_Q7mP6" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-0UAOhTFw" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Windy Hill">
+                                            Windy Hill                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/MvWemq6e/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-MvWemq6e" src="../../../_ext/lh3.googleusercontent.com/d/1hju_wYBYsR4FCzjNg077-jgwTIyIEvK5=w800/index.html" alt="cover" data-linkid="1hju_wYBYsR4FCzjNg077-jgwTIyIEvK5" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-MvWemq6e" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Bảo &amp; Trân - Ảnh Cưới Truyền Thống">
+                                            Bảo &amp; Trân - Ảnh Cưới Truyền Thống                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/YUc8lyXI/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-YUc8lyXI" src="../../../_ext/lh3.googleusercontent.com/d/1X4iAwoWJBHWAdbFCRlkqDcarpRAn_ZUm=w800/index.html" alt="cover" data-linkid="1X4iAwoWJBHWAdbFCRlkqDcarpRAn_ZUm" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-YUc8lyXI" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Nhà Thơ Mỹ Thanh 02-05-2026">
+                                            Nhà Thơ Mỹ Thanh 02-05-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/q7Da3yXj/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-q7Da3yXj" src="../../../_ext/lh3.googleusercontent.com/d/1XF7VWFp6JnelJczBfQgqNnexSJgFaxGy=w800/index.html" alt="cover" data-linkid="1XF7VWFp6JnelJczBfQgqNnexSJgFaxGy" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-q7Da3yXj" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="2048">
+                                            2048                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/HhTbonW8/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-HhTbonW8" src="../../../_ext/lh3.googleusercontent.com/d/1eJRwcX9HW5v6HWHpX4NTPII-RUb6fS63=w800/index.html" alt="cover" data-linkid="1eJRwcX9HW5v6HWHpX4NTPII-RUb6fS63" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-HhTbonW8" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Hội Thảo 14-04-2026">
+                                            Hội Thảo 14-04-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/VWX48g1B/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-VWX48g1B" src="../../../_ext/lh3.googleusercontent.com/d/1gB9K-ILX3lDyKs3Q-Dc94Lq0BC7jjDib=w800/index.html" alt="cover" data-linkid="1gB9K-ILX3lDyKs3Q-Dc94Lq0BC7jjDib" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-VWX48g1B" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Khánh Như - Trường THPT Chuyên Lê Quý Đôn 13-04-2026">
+                                            Khánh Như - Trường THPT Chuyên Lê Quý Đôn 13-04-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/alKqyxSD/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-alKqyxSD" src="../../../_ext/lh3.googleusercontent.com/d/15UYs7nUkRD8jJKPr1ah7eIQD79L9_1f_=w800/index.html" alt="cover" data-linkid="15UYs7nUkRD8jJKPr1ah7eIQD79L9_1f_" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-alKqyxSD" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Nhân &amp; Ngân 02-04-2026">
+                                            Nhân &amp; Ngân 02-04-2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/26LtrJgg/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-26LtrJgg" src="../../../_ext/lh3.googleusercontent.com/d/1ptDzPGXYM5o1M6N1P86g-XgPPXOwNqfU=w800/index.html" alt="cover" data-linkid="1ptDzPGXYM5o1M6N1P86g-XgPPXOwNqfU" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-26LtrJgg" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Đà Lạt ">
+                                            Đà Lạt                                         </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/s6E9Pm17/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-s6E9Pm17" src="../../../_ext/lh3.googleusercontent.com/d/1-pm789YSq9-QZmeI8K4Gf-HI4h_CUgLk=w800/index.html" alt="cover" data-linkid="1-pm789YSq9-QZmeI8K4Gf-HI4h_CUgLk" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-s6E9Pm17" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Văn Nghệ - Nhà Thờ Mỹ Thanh">
+                                            Văn Nghệ - Nhà Thờ Mỹ Thanh                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/MfelS4eW/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-MfelS4eW" src="../../../_ext/lh3.googleusercontent.com/d/1Z-iK_Po3LAY5MDDXgKj2n1AM9JYTrIla=w800/index.html" alt="cover" data-linkid="1Z-iK_Po3LAY5MDDXgKj2n1AM9JYTrIla" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-MfelS4eW" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Trà - Tết 2026">
+                                            Trà - Tết 2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/XFtl1jlc/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-XFtl1jlc" src="../../../_ext/lh3.googleusercontent.com/d/1PSJN8IbLacd5mVdC2gNaG9ZFhaQGmm4v=w800/index.html" alt="cover" data-linkid="1PSJN8IbLacd5mVdC2gNaG9ZFhaQGmm4v" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-XFtl1jlc" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Ảnh Cưới Đăng Khôi &amp; Bảo Ngân 28.01.2026">
+                                            Ảnh Cưới Đăng Khôi &amp; Bảo Ngân 28.01.2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Tcjl4Xp2/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Tcjl4Xp2" src="../../../_ext/lh3.googleusercontent.com/d/1JH4sKok0DoChcyNPTQD2K6cbPHgUcAhY=w800/index.html" alt="cover" data-linkid="1JH4sKok0DoChcyNPTQD2K6cbPHgUcAhY" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Tcjl4Xp2" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Dạm Ngõ Trân &amp; Bảo 24.01.2026">
+                                            Dạm Ngõ Trân &amp; Bảo 24.01.2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/bDmovG3c/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-bDmovG3c" src="../../../_ext/lh3.googleusercontent.com/d/1z89QEETQBGLmnKCLmYBM6Z9yyG3sAp6M=w800/index.html" alt="cover" data-linkid="1z89QEETQBGLmnKCLmYBM6Z9yyG3sAp6M" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-bDmovG3c" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Khôi &amp; Ngân Ảnh Studio">
+                                            Khôi &amp; Ngân Ảnh Studio                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/HpKhe0av/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-HpKhe0av" src="../../../_ext/lh3.googleusercontent.com/d/1peU7FsPuwnZTvANTlUSYWta8USo3FDYY=w800/index.html" alt="cover" data-linkid="1peU7FsPuwnZTvANTlUSYWta8USo3FDYY" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-HpKhe0av" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="New Viet Dairy 2026">
+                                            New Viet Dairy 2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/hUglnXyR/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-hUglnXyR" src="../../../_ext/lh3.googleusercontent.com/d/1K9VBJDkog_FviPgvhxdOl9CbpA9BEHlA=w800/index.html" alt="cover" data-linkid="1K9VBJDkog_FviPgvhxdOl9CbpA9BEHlA" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-hUglnXyR" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Đà Lạt 2026">
+                                            Đà Lạt 2026                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/1XFx30Jc/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-1XFx30Jc" src="../../../_ext/lh3.googleusercontent.com/d/1QMRD9i-QU9YBRo7cx7V4-uGbkGGVIdzN=w800/index.html" alt="cover" data-linkid="1QMRD9i-QU9YBRo7cx7V4-uGbkGGVIdzN" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-1XFx30Jc" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Phóng sự cưới">
+                                            Phóng sự cưới                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/3uwoWMcx/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-3uwoWMcx" src="../../../_ext/lh3.googleusercontent.com/d/1zNSyqVdcoEf2JImj7ysHXDWjOaxk-CdW=w800/index.html" alt="cover" data-linkid="1zNSyqVdcoEf2JImj7ysHXDWjOaxk-CdW" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-3uwoWMcx" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Giáng Sinh Nhà Thờ Mỹ Thanh 2025">
+                                            Giáng Sinh Nhà Thờ Mỹ Thanh 2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/XvkHzZE1/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-XvkHzZE1" src="../../../_ext/lh3.googleusercontent.com/d/1bh38o4JQeTeN3ShyZZ0BD2qLeQ1BvqVw=w800/index.html" alt="cover" data-linkid="1bh38o4JQeTeN3ShyZZ0BD2qLeQ1BvqVw" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-XvkHzZE1" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Lễ Đính Hôn Khôi &amp; Ngân">
+                                            Lễ Đính Hôn Khôi &amp; Ngân                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/PBvTPDyv/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-PBvTPDyv" src="../../../_ext/lh3.googleusercontent.com/d/16JM1a5dxEvIttFTv0O_atZHnU3cBf3QY=w800/index.html" alt="cover" data-linkid="16JM1a5dxEvIttFTv0O_atZHnU3cBf3QY" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-PBvTPDyv" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="BioFactory - Lễ Ra Mắt Và Gắn Biển Công Trình">
+                                            BioFactory - Lễ Ra Mắt Và Gắn Biển Công Trình                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/E2jGKYu5/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-E2jGKYu5" src="../../../_ext/lh3.googleusercontent.com/d/1LRKl-_jRtt0CSoQUcQjnxdSjvzFZrmz_=w800/index.html" alt="cover" data-linkid="1LRKl-_jRtt0CSoQUcQjnxdSjvzFZrmz_" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-E2jGKYu5" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Giáo Sứ Thịnh Sơn 03.11">
+                                            Giáo Sứ Thịnh Sơn 03.11                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Fa8VNdr3/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Fa8VNdr3" src="../../../_ext/lh3.googleusercontent.com/d/1dFqvVFsuu67CDbS6NuE_5CqapncwEv6Y=w800/index.html" alt="cover" data-linkid="1dFqvVFsuu67CDbS6NuE_5CqapncwEv6Y" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Fa8VNdr3" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Khai Trương An Phúc Land 28.10.2025">
+                                            Khai Trương An Phúc Land 28.10.2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/rmmF4Agl/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-rmmF4Agl" src="../../../_ext/lh3.googleusercontent.com/d/1oC0yp6PwZftvCA1H19K3Y1tFcFZczsYU=w800/index.html" alt="cover" data-linkid="1oC0yp6PwZftvCA1H19K3Y1tFcFZczsYU" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-rmmF4Agl" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Thôi nôi bé Phúc Đăng 25-10">
+                                            Thôi nôi bé Phúc Đăng 25-10                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/FshJ9DMj/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-FshJ9DMj" src="../../../_ext/lh3.googleusercontent.com/d/1U4anvEODLd72WAHIeFVdp24aWy9yYZjS=w800/index.html" alt="cover" data-linkid="1U4anvEODLd72WAHIeFVdp24aWy9yYZjS" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-FshJ9DMj" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt nghiệp 3">
+                                            Tốt nghiệp 3                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/X7OZzM4H/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-X7OZzM4H" src="../../../_ext/lh3.googleusercontent.com/d/1Ej0UefEBA8RnwbHZYpuLBEJmI9aAsaib=w800/index.html" alt="cover" data-linkid="1Ej0UefEBA8RnwbHZYpuLBEJmI9aAsaib" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-X7OZzM4H" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt nghiệp 2">
+                                            Tốt nghiệp 2                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/nmUxXiV5/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-nmUxXiV5" src="../../../_ext/lh3.googleusercontent.com/d/1adn8ipYvCC7G3juinHkUcXd12_lCfBHi=w800/index.html" alt="cover" data-linkid="1adn8ipYvCC7G3juinHkUcXd12_lCfBHi" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-nmUxXiV5" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt nghiệp">
+                                            Tốt nghiệp                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/rVwJMCZz/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-rVwJMCZz" src="../../../_ext/lh3.googleusercontent.com/d/1WM6BDqgmRzSRx22OXNsJ-91kY9_9TdW0=w800/index.html" alt="cover" data-linkid="1WM6BDqgmRzSRx22OXNsJ-91kY9_9TdW0" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-rVwJMCZz" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Scan &amp; Phục Chế - Chị Nhiên - FIX">
+                                            Scan &amp; Phục Chế - Chị Nhiên - FIX                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/VBYo25lf/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-VBYo25lf" src="../../../_ext/lh3.googleusercontent.com/d/15UZgZE3Tav7MmvSWtjdJsSPDe-BlajKq=w800/index.html" alt="cover" data-linkid="15UZgZE3Tav7MmvSWtjdJsSPDe-BlajKq" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-VBYo25lf" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tiệc Báo Hỷ Đức Chính &amp; Hương Trà 29.09 Làng Yến Mai Sinh">
+                                            Tiệc Báo Hỷ Đức Chính &amp; Hương Trà 29.09 Làng Yến Mai Sinh                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/cTr6HpUA/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-cTr6HpUA" src="../../../_ext/lh3.googleusercontent.com/d/1p4Pm0F0LK8fMA4yhGyJB9-VIABIa6ho7=w800/index.html" alt="cover" data-linkid="1p4Pm0F0LK8fMA4yhGyJB9-VIABIa6ho7" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-cTr6HpUA" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Lễ Thành Hôn 21.09 Sông Hinh">
+                                            Lễ Thành Hôn 21.09 Sông Hinh                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/ChOUn97U/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-ChOUn97U" src="../../../_ext/lh3.googleusercontent.com/d/1OZTEQ98Ivhg2Fqy1WVuXr2qoe8jyPzw9=w800/index.html" alt="cover" data-linkid="1OZTEQ98Ivhg2Fqy1WVuXr2qoe8jyPzw9" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-ChOUn97U" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tiệc Cưới 22.09 Sông Hinh">
+                                            Tiệc Cưới 22.09 Sông Hinh                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/PLsca59M/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-PLsca59M" src="../../../_ext/lh3.googleusercontent.com/d/1yc5O7GqbYGqoYhmwACBWNmL_Xs3O196Q=w800/index.html" alt="cover" data-linkid="1yc5O7GqbYGqoYhmwACBWNmL_Xs3O196Q" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-PLsca59M" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Lễ Vu Quy 21.09 Tuy Hòa">
+                                            Lễ Vu Quy 21.09 Tuy Hòa                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Kxh89hP2/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Kxh89hP2" src="../../../_ext/lh3.googleusercontent.com/d/1RCO9BeNc55kzUWdYTX5Mbjier2I5UMCY=w800/index.html" alt="cover" data-linkid="1RCO9BeNc55kzUWdYTX5Mbjier2I5UMCY" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Kxh89hP2" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tiệc Cưới 20.09 Tuy Hòa">
+                                            Tiệc Cưới 20.09 Tuy Hòa                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/m9e0a0KK/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-m9e0a0KK" src="../../../_ext/lh3.googleusercontent.com/d/1sYMY14rVlmU-snxCbEEjhSImr7rnSagN=w800/index.html" alt="cover" data-linkid="1sYMY14rVlmU-snxCbEEjhSImr7rnSagN" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-m9e0a0KK" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="KHAI GIẢNG THCS NGUYỄN KHUYẾN 2025">
+                                            KHAI GIẢNG THCS NGUYỄN KHUYẾN 2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Rg5k2TjJ/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Rg5k2TjJ" src="../../../_ext/lh3.googleusercontent.com/d/19hk7EB1mcd89fR2L3REIInKDNeyVVt4B=w800/index.html" alt="cover" data-linkid="19hk7EB1mcd89fR2L3REIInKDNeyVVt4B" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Rg5k2TjJ" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Sinh Nhật Chú Thi 03-08-2025">
+                                            Sinh Nhật Chú Thi 03-08-2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/II7gckLk/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-II7gckLk" src="../../../_ext/lh3.googleusercontent.com/d/1m-njV2ARqq9P0bJHf3pcu_MTCz6BmIby=w800/index.html" alt="cover" data-linkid="1m-njV2ARqq9P0bJHf3pcu_MTCz6BmIby" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-II7gckLk" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tốt Nghiệp Bích Ngọc K63 - 2025">
+                                            Tốt Nghiệp Bích Ngọc K63 - 2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/w1OHQiL2/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-w1OHQiL2" src="../../../_ext/lh3.googleusercontent.com/d/1F0N_G9FXS12CvB7V2gg8UyEbG37fxPpN=w800/index.html" alt="cover" data-linkid="1F0N_G9FXS12CvB7V2gg8UyEbG37fxPpN" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-w1OHQiL2" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Đám Hỏi Đức Chính &amp; Hương Trà">
+                                            Đám Hỏi Đức Chính &amp; Hương Trà                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/Drs53b3g/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-Drs53b3g" src="../../../_ext/lh3.googleusercontent.com/d/1Acmr4uCmb_RxuTDCRwTSx-PB74at_VNi=w800/index.html" alt="cover" data-linkid="1Acmr4uCmb_RxuTDCRwTSx-PB74at_VNi" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-Drs53b3g" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Hồng Hà Đà Lạt 17.06.2025">
+                                            Hồng Hà Đà Lạt 17.06.2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/l4k3qoup/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-l4k3qoup" src="../../../_ext/lh3.googleusercontent.com/d/1Xq1WWcpZWJ8c4s8Hp7mAOMeG77mDjAR-=w800/index.html" alt="cover" data-linkid="1Xq1WWcpZWJ8c4s8Hp7mAOMeG77mDjAR-" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-l4k3qoup" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Hình Tốt Nghiệp THCS Nguyễn Khuyến 2025">
+                                            Hình Tốt Nghiệp THCS Nguyễn Khuyến 2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/c1CrsG9F/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-c1CrsG9F" src="../../../_ext/lh3.googleusercontent.com/d/1qZTOA8yrgRgIYRCHVsLrdEeAcGwrEvBC=w800/index.html" alt="cover" data-linkid="1qZTOA8yrgRgIYRCHVsLrdEeAcGwrEvBC" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-c1CrsG9F" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Hình Cưới Truyền Thống Duyên &amp; Thịnh 11.05.2025">
+                                            Hình Cưới Truyền Thống Duyên &amp; Thịnh 11.05.2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/vSc12hLM/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-vSc12hLM" src="../../../_ext/lh3.googleusercontent.com/d/1I25DWoKuIzfyuhJDpx843ERs1hHq1lS4=w800/index.html" alt="cover" data-linkid="1I25DWoKuIzfyuhJDpx843ERs1hHq1lS4" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-vSc12hLM" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Kỷ Yếu 12C3 - THPT Huỳnh Thúc Kháng">
+                                            Kỷ Yếu 12C3 - THPT Huỳnh Thúc Kháng                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/iBPwqbof/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-iBPwqbof" src="../../../_ext/lh3.googleusercontent.com/d/12v-TavzRrTNP5AAds_AsNEw7s5cb46xl=w800/index.html" alt="cover" data-linkid="12v-TavzRrTNP5AAds_AsNEw7s5cb46xl" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-iBPwqbof" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Cắm Trại THCS Nguyễn Khuyến 2025">
+                                            Cắm Trại THCS Nguyễn Khuyến 2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/uAQ7TUPn/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-uAQ7TUPn" src="../../../_ext/lh3.googleusercontent.com/d/1eoBi1LpukYJ2z3S7G8Nh7wZjNLDdVTc2=w800/index.html" alt="cover" data-linkid="1eoBi1LpukYJ2z3S7G8Nh7wZjNLDdVTc2" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-uAQ7TUPn" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="KHAI TRƯƠNG AMEI MUSIC">
+                                            KHAI TRƯƠNG AMEI MUSIC                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/tzk39fuq/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-tzk39fuq" src="../../../_ext/lh3.googleusercontent.com/d/15wrUJ1F9i3Gxt6RzBqB-r4yQxQF5IVjD=w800/index.html" alt="cover" data-linkid="15wrUJ1F9i3Gxt6RzBqB-r4yQxQF5IVjD" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-tzk39fuq" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Hội Thảo Bất Động Sản Cam Ranh | batdongsan.com.vn">
+                                            Hội Thảo Bất Động Sản Cam Ranh | batdongsan.com.vn                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/5cvNL3xo/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-5cvNL3xo" src="../../../_ext/lh3.googleusercontent.com/d/1NwNgyqv7RjOl-zrUhf8sfDMOthjh40G6=w800/index.html" alt="cover" data-linkid="1NwNgyqv7RjOl-zrUhf8sfDMOthjh40G6" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-5cvNL3xo" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Em Bé Bạch Nguyệt Quang">
+                                            Em Bé Bạch Nguyệt Quang                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/ORXrp8MO/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-ORXrp8MO" src="../../../_ext/lh3.googleusercontent.com/d/1nfwqe4QhEp5o8PAd81__Gu2D1okVjRIZ=w800/index.html" alt="cover" data-linkid="1nfwqe4QhEp5o8PAd81__Gu2D1okVjRIZ" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-ORXrp8MO" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Thanh Xuân Vườn Trường">
+                                            Thanh Xuân Vườn Trường                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/pw6Cl7tI/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-pw6Cl7tI" src="../../../_ext/lh3.googleusercontent.com/d/1GEt3ni_GqebN7KI1f8hpWW0lE-6oeWuS=w800/index.html" alt="cover" data-linkid="1GEt3ni_GqebN7KI1f8hpWW0lE-6oeWuS" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-pw6Cl7tI" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Đà Lạt">
+                                            Đà Lạt                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/UYtEgqOP/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-UYtEgqOP" src="../../../_ext/lh3.googleusercontent.com/d/1vUPjBZQQL1EyyROFwdTIdbAAf5oivV1B=w800/index.html" alt="cover" data-linkid="1vUPjBZQQL1EyyROFwdTIdbAAf5oivV1B" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-UYtEgqOP" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Cưới Hỏi Chánh Tín &amp; Hồng Anh">
+                                            Cưới Hỏi Chánh Tín &amp; Hồng Anh                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/i25xU0Pu/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-i25xU0Pu" src="../../../_ext/lh3.googleusercontent.com/d/1Cu6BzQ7ztD75UiROVqcwyFPoZJLveTo0=w800/index.html" alt="cover" data-linkid="1Cu6BzQ7ztD75UiROVqcwyFPoZJLveTo0" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-i25xU0Pu" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Linh Phan Rang">
+                                            Linh Phan Rang                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/dO1f0U3C/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-dO1f0U3C" src="../../../_ext/lh3.googleusercontent.com/d/1sVqASYjgC3Ip0kkaH9_NCXi4qMmUqPVO=w800/index.html" alt="cover" data-linkid="1sVqASYjgC3Ip0kkaH9_NCXi4qMmUqPVO" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-dO1f0U3C" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Nhà Thờ Mỹ Thanh 17.08.2024">
+                                            Nhà Thờ Mỹ Thanh 17.08.2024                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/b468j9Yx/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-b468j9Yx" src="../../../_ext/lh3.googleusercontent.com/d/1bE7axfQHu34Rkd32ZII0ZE8Q5tOz4RK9=w800/index.html" alt="cover" data-linkid="1bE7axfQHu34Rkd32ZII0ZE8Q5tOz4RK9" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-b468j9Yx" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Quỳnh - Nga Tốt Nghiệp 30.07.2024 (máy Trường)">
+                                            Quỳnh - Nga Tốt Nghiệp 30.07.2024 (máy Trường)                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/zpRREkyL/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-zpRREkyL" src="../../../_ext/lh3.googleusercontent.com/d/1ZIuZ4N-RnpDWLPHDx8Om_Zfggr1FBgeD=w800/index.html" alt="cover" data-linkid="1ZIuZ4N-RnpDWLPHDx8Om_Zfggr1FBgeD" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-zpRREkyL" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Quỳnh - Nga Tốt Nghiệp 30.07.2024 (máy a Chính)">
+                                            Quỳnh - Nga Tốt Nghiệp 30.07.2024 (máy a Chính)                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/t7koFX0J/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-t7koFX0J" src="../../../_ext/lh3.googleusercontent.com/d/1H15LtKrfzzsc6kgQBR-6woeIuEtKOPnV=w800/index.html" alt="cover" data-linkid="1H15LtKrfzzsc6kgQBR-6woeIuEtKOPnV" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-t7koFX0J" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Mỹ Duyên - Tốt Nghiệp 27.07.2024">
+                                            Mỹ Duyên - Tốt Nghiệp 27.07.2024                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                                <div class="album-masonry-item">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <div class="album-thumb-g-wrap">
+                                        <a href="../../../album/photo/wzsCuNU6/0/1/index.html">
+                                            <img class="album-thumb-g" id="thumb-wzsCuNU6" src="../../../_ext/lh3.googleusercontent.com/d/1K5o4kiBbfp94WfKKEm0NKtty8o0YN1Js=w800/index.html" alt="cover" data-linkid="1K5o4kiBbfp94WfKKEm0NKtty8o0YN1Js" loading="lazy" decoding="async" onload="this.classList.add('loaded'); this.closest('.album-thumb-g-wrap')?.classList.add('is-loaded');" onerror="handleImageError(this)">
+                                        </a>
+                                        <div class="album-thumb-g-loading" id="loading-wzsCuNU6" style="display:none;">
+                                            <div class="lds-dual-ring"></div>
+                                        </div>
+                                    </div>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Mừng Thọ Cụ Bà 88 Tuổi 13.07.2024">
+                                            Mừng Thọ Cụ Bà 88 Tuổi 13.07.2024                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                    </div>
+                </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".album-thumb-g").forEach(function (img) {
+                            if (img.complete && img.naturalHeight !== 0) {
+                                img.classList.add("loaded");
+                                if (img.closest(".album-thumb-g-wrap")) {
+                                    img.closest(".album-thumb-g-wrap").classList.add("is-loaded");
+                                }
+                            }
+                        });
+
+                        document.querySelectorAll(".btn-delete-album").forEach(function (button) {
+                            button.addEventListener("click", function (e) {
+                                e.preventDefault(); // không chuyển trang
+                                if (confirm("Bạn chắc chắn xóa?")) {
+                                    const card = button.closest(".album-masonry-item, .col-lg-4");
+                                    if (card) {
+                                        card.remove();
+                                    }
+                                    const albumId = button.getAttribute("data-id");
+                                    fetch(`https://albumse.online/album/delete_album.php?id_album=${albumId}`, {
+                                        method: 'GET'
+                                    }).then(response => {
+                                        // Xử lý sau xoá, nếu cần
+                                    });
+
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <!-- Videos Tab -->
+                <div class="tab-pane fade" id="videos" role="tabpanel">
+                    <div class="row">
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/B6445609/95948F40/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1L21377idCPe-of8ld097A0D53xYtEdEP&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1L21377idCPe-of8ld097A0D53xYtEdEP=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Mẫn">
+                                            Mẫn                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/AF87F0E0/01276D58/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1gDbiIC3cajKHNbhivONWq5PcUUhO6Bdx&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1gDbiIC3cajKHNbhivONWq5PcUUhO6Bdx=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Phóng sự cưới Tuấn &amp; Hiệp">
+                                            Phóng sự cưới Tuấn &amp; Hiệp                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/2B8957DF/646897E5/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1gDbiIC3cajKHNbhivONWq5PcUUhO6Bdx&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1gDbiIC3cajKHNbhivONWq5PcUUhO6Bdx=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Tets">
+                                            Tets                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/EBA2C51C/5701D1CC/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1lrOx2uB9epQgUbs0jm3_uAiQ4TpEcBW8&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1lrOx2uB9epQgUbs0jm3_uAiQ4TpEcBW8=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Cưới Truyền Thống Bích Vương &amp; Văn Hân">
+                                            Cưới Truyền Thống Bích Vương &amp; Văn Hân                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/9D2D8BF7/6FA4EFED/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1ab-n5TtMQJ1mHymjyVNXo5vTf_EEwS8l&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1ab-n5TtMQJ1mHymjyVNXo5vTf_EEwS8l=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Dốc Nha Trang">
+                                            Dốc Nha Trang                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/D177F522/3CC64AED/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1lKCOrO5qa1cD17sQT05cs3kGihKlLkU6&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1lKCOrO5qa1cD17sQT05cs3kGihKlLkU6=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Trend Thuy Cung">
+                                            Trend Thuy Cung                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/83E1C34D/0C340362/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1FagH1V5G5Y56vMNTzx06bhoUE8hqhjUY&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1FagH1V5G5Y56vMNTzx06bhoUE8hqhjUY=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="Kỷ yếu THPT Nguyễn Trãi">
+                                            Kỷ yếu THPT Nguyễn Trãi                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="col-lg-4 col-md-6 mb-3 d-flex">
+                                <div class="album-google-card flex-fill d-flex flex-column">
+                                    <a href="../../../video/13AD2073/62656153/index.html">
+                                        <img class="album-thumb-g" src="https://lh3.googleusercontent.com/d/1lx8mjL7NlBZKcC6Xl78NLAyB4FBQBBXh&amp;sz=w600" onerror="this.onerror=null; this.src='https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/1lx8mjL7NlBZKcC6Xl78NLAyB4FBQBBXh=w600'" alt="video-thumb">
+                                    </a>
+                                    <div class="album-body-g">
+                                        <div class="album-title-g" title="PSC Hoàng Gia &amp; Ngọc Luân 22.01.2025">
+                                            PSC Hoàng Gia &amp; Ngọc Luân 22.01.2025                                        </div>
+                                        <div class="album-meta-g">Công Khai (Portfolio)</div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../_ext/cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function dongBoDrive(id_album, event) {
+            event.preventDefault();
+            var loading = document.getElementById("loading-" + id_album);
+            if (loading) loading.style.display = "flex";
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://albumse.online/album/update_image.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (loading) loading.style.display = "none";
+                    if (xhr.status === 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                alert("Đã đồng bộ với Drive và thêm ảnh thành công");
+                                // Bạn có thể reload lại album nếu muốn
+                            } else {
+                                alert("Lỗi không đồng bộ được");
+                            }
+                        } catch (e) {
+                            alert("Có lỗi khi xử lý kết quả đồng bộ!");
+                        }
+                    } else {
+                        alert("Có lỗi khi kết nối tới server!");
+                    }
+                }
+            };
+            xhr.send("id_album=" + id_album);
+        }
+    </script>
+    <script>
+        function handleImageError(img) {
+            const linkId = img.getAttribute('data-linkid');
+
+            if (!img._attempt1) {
+                img._attempt1 = true;
+                img.src = `https://images.weserv.nl/?url=https://lh3.googleusercontent.com/d/${linkId}=w600`;
+            } else if (!img._attempt2) {
+                img._attempt2 = true;
+                img.src = 'https://albumse.online/src/index/remove_img.jpg';
+            } else {
+                img.onerror = null; // Dừng retry
+            }
+        }
+    </script>
+
+
+</body></html>

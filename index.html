@@ -250,7 +250,7 @@
               </div>
 
               <!-- Nút mở Google Drive -->
-              <button class="btn-modern btn-glass" onclick="window.open(Gallery.getCurrentAlbum()?.link_drive || 'https://drive.google.com', '_blank')">
+              <button class="btn-modern btn-glass" onclick="window.open(DriveParser.getFolderUrl(Gallery.getCurrentAlbum()?.link_drive), '_blank')">
                 <i class="bi bi-google text-primary"></i> <span>Mở Drive</span>
               </button>
 

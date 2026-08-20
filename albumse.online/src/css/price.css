@@ -1,0 +1,347 @@
+:root {
+    --primary: #2a3f54;
+    --secondary: #4c6887;
+    --accent: #00a3e0;
+    --light: #f7f9fc;
+    --dark: #1a2530;
+    --success: #21d07c;
+    --border: #e9ecef;
+    --shadow: rgba(42, 63, 84, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.price-body {
+    background-color: var(--light);
+    color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+} 
+
+.container {
+    /* max-width: 700px; */
+    width: 100%;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary);
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: var(--secondary);
+    margin-bottom: 32px;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.toggle-label {
+    font-size: 14px;
+    color: var(--secondary);
+    cursor: pointer;
+}
+
+.toggle-label.active {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.toggle {
+    position: relative;
+    width: 60px;
+    height: 32px;
+    margin: 0 12px;
+    background-color: var(--light);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-handle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toggle.yearly .toggle-handle {
+    left: 30px;
+}
+
+.pricing-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.pricing-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px var(--shadow);
+    border-color: var(--accent);
+}
+
+.pricing-card.popular::before {
+    content: "Mua Nhiều";
+    position: absolute;
+    top: 12px;
+    right: -30px;
+    background-color: var(--accent);
+    color: white;
+    padding: 4px 30px;
+    font-size: 12px;
+    transform: rotate(45deg);
+    font-weight: 500;
+}
+
+.plan-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.plan-price {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+}
+
+.plan-price .currency {
+    font-size: 20px;
+    margin-right: 4px;
+}
+
+.plan-price .period {
+    font-size: 14px;
+    color: var(--secondary);
+    margin-left: 4px;
+    font-weight: 400;
+}
+
+.plan-description {
+    font-size: 14px;
+    color: var(--secondary);
+    margin-bottom: 24px;
+}
+
+.features {
+    list-style: none;
+    margin-bottom: 24px;
+    flex-grow: 1;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--secondary);
+    margin-bottom: 12px;
+}
+
+.feature-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: var(--success);
+}
+
+.feature-icon.unavailable {
+    color: var(--border);
+}
+
+.btn-price {
+    background-color: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+    outline: none;
+}
+
+.btn-price-primary {
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-price:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 163, 224, 0.2);
+}
+
+.btn-price-primary:hover {
+    background-color: #0091c7;
+    border-color: #0091c7;
+}
+
+.save-badge {
+    display: inline-block;
+    background-color: rgba(33, 208, 124, 0.1);
+    color: var(--success);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 8px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.save-badge.show {
+    transform: scale(1);
+}
+
+.yearly-price {
+    display: none;
+}
+
+.pricing-card .pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 163, 224, 0.1);
+    border-radius: 12px;
+    z-index: -1;
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .pricing-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .pricing-card {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.feature-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.info-icon {
+    margin-left: 4px;
+    color: var(--secondary);
+    opacity: 0.5;
+    font-size: 12px;
+    cursor: help;
+}
+
+.tooltip-text {
+    position: absolute;
+    top: -8px;
+    left: 100%;
+    transform: translateY(-100%);
+    background-color: var(--dark);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 10px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--dark);
+}
+
+.feature-tooltip:hover .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 50px 0 0;
+    border-color: var(--accent) transparent transparent transparent;
+    z-index: 1;
+}
+
+.badge-text {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transform: rotate(-45deg);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    z-index: 2;
+}

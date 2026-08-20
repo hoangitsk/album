@@ -71,7 +71,8 @@ const Lightbox = (function () {
     if (img) {
       img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9"%3E%3C/svg%3E';
       const cdnUrl = DriveParser.getCdnUrl(photo.link_id, 1920);
-      const fallbackUrl = DriveParser.getFallbackUrl(photo.link_id, 1600);
+      const fallbackUrl1 = DriveParser.getFallbackUrl(photo.link_id, 1600);
+      const fallbackUrl2 = DriveParser.getWeservCdnUrl(photo.link_id, 1600);
 
       const highRes = new Image();
       highRes.onload = () => {
@@ -79,8 +80,16 @@ const Lightbox = (function () {
         drawWatermark();
       };
       highRes.onerror = () => {
-        img.src = fallbackUrl;
-        drawWatermark();
+        const fallbackImg = new Image();
+        fallbackImg.onload = () => {
+          img.src = fallbackUrl1;
+          drawWatermark();
+        };
+        fallbackImg.onerror = () => {
+          img.src = fallbackUrl2;
+          drawWatermark();
+        };
+        fallbackImg.src = fallbackUrl1;
       };
       highRes.src = cdnUrl;
     }
