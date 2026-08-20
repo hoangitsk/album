@@ -690,7 +690,7 @@ const App = (function () {
     // Trích xuất File ID / Photos từ Link Drive
     let photos = existingAlbum ? (existingAlbum.photos || []) : [];
 
-    // Nếu tạo mới hoặc đổi link Drive hoặc đang có <= 7 ảnh mẫu
+    // Nếu tạo mới hoặc đổi link Drive hoặc đang có ít ảnh
     if (!existingAlbum || existingAlbum.link_drive !== linkDrive || photos.length <= 7) {
       try {
         const scannedPhotos = await DriveParser.scanDriveFolder(linkDrive);
@@ -713,15 +713,26 @@ const App = (function () {
               note: old.note || ''
             } : np;
           });
+
+          showToast(`✓ Đã quét thành công ${photos.length} ảnh từ Google Drive!`, 'success');
         } else {
-          // Fallback nếu chưa cấu hình Apps Script hoặc link đơn lẻ
-          const folderId = DriveParser.extractFolderId(linkDrive);
+          // Kiểm tra xem người dùng có dán trực tiếp danh sách nhiều link ảnh không
           const parsedPhotos = DriveParser.parseMultipleLinks(linkDrive);
 
           if (parsedPhotos.length > 0) {
             photos = parsedPhotos;
-          } else if (folderId && photos.length === 0) {
-            photos = generatePhotosForFolder(folderId);
+            showToast(`✓ Đã nhận diện ${photos.length} ảnh từ danh sách link!`, 'success');
+          } else {
+            // Không quét được ảnh
+            if (photos.length === 0) {
+              alert(
+                `⚠️ Chưa thể quét tự động ảnh từ link Google Drive này!\n\n` +
+                `📌 Nguyên nhân & Cách khắc phục:\n` +
+                `1. Link Google Apps Script Web App của bạn cần được cập nhật mã nguồn mới để hỗ trợ quét thư mục (Bấm vào nút "Cài đặt" trên thanh menu để xem và copy mã Apps Script mới).\n` +
+                `2. Hãy chắc chắn Thư mục Google Drive đã được bật chia sẻ: "Bất kỳ ai có đường liên kết đều có thể xem".\n` +
+                `3. Hoặc bạn có thể dán trực tiếp danh sách link ảnh vào ô này.`
+              );
+            }
           }
         }
       } catch (err) {
